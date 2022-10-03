@@ -203,6 +203,31 @@ valign = 1
 unique_name_in_owner = true
 duration = 1.0
 
+[node name="MarginContainer2" type="MarginContainer" parent="CanvasLayer/Control"]
+margin_right = 125.0
+margin_bottom = 44.0
+mouse_filter = 2
+custom_constants/margin_right = 10
+custom_constants/margin_top = 10
+custom_constants/margin_left = 10
+custom_constants/margin_bottom = 10
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/Control/MarginContainer2"]
+margin_left = 10.0
+margin_top = 10.0
+margin_right = 115.0
+margin_bottom = 34.0
+mouse_filter = 2
+
+[node name="Mute" type="CheckBox" parent="CanvasLayer/Control/MarginContainer2/HBoxContainer"]
+unique_name_in_owner = true
+margin_right = 72.0
+margin_bottom = 24.0
+shortcut_in_tooltip = false
+pressed = true
+text = "mute"
+flat = true
+
 [node name="Loose" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 4 )
 
@@ -245,5 +270,6 @@ one_shot = true
 [connection signal="press_finished" from="Buzzer" to="." method="_on_Buzzer_press_finished"]
 [connection signal="pressed" from="Buzzer" to="." method="_on_Buzzer_pressed"]
 [connection signal="finished" from="CanvasLayer/Control/Fade" to="." method="_on_Fade_finished"]
+[connection signal="pressed" from="CanvasLayer/Control/MarginContainer2/HBoxContainer/Mute" to="." method="_on_CheckBox_pressed"]
 [connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_AnimationPlayer_animation_finished"]
 [connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]

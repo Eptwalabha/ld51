@@ -17,6 +17,7 @@ onready var fade : Fade = $"%Fade"
 onready var eptwalabha : Label = $"%Eptwalabha"
 onready var powerArea : PowerArea = $BG/PowerArea
 onready var timer : Timer = $Timer
+onready var mute : CheckBox = $"%Mute"
 
 export(Curve) var shrink_curve
 export(float) var duration : float = 10.0
@@ -53,6 +54,8 @@ enum LEVEL {
 }
 
 func _ready() -> void:
+	AudioServer.set_bus_mute(0, Stats.mute)
+	mute.pressed = Stats.mute
 	randomize()
 	count_down.hide()
 	buzzer.turn_light(true, true)
@@ -275,6 +278,9 @@ func game_over_key() -> String:
 func _on_Buzzer_pressed() -> void:
 	press_count += 1
 	Stats.nbr_click += 1
+	if game_over:
+		buzzer.play_sound(false)
+		return
 	level_end = true
 	if !game_started:
 		sticky.fall()
@@ -339,3 +345,8 @@ func _on_Buzzer_press_finished() -> void:
 			fade.fade_out()
 		_:
 			next_level()
+
+
+func _on_CheckBox_pressed() -> void:
+	AudioServer.set_bus_mute(0, mute.pressed)
+	Stats.mute = mute.pressed
