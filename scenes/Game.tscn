@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=2]
+[gd_scene load_steps=15 format=2]
 
 [ext_resource path="res://scenes/Game.gd" type="Script" id=1]
 [ext_resource path="res://scenes/item/bg/PowerArea.tscn" type="PackedScene" id=2]
@@ -9,6 +9,10 @@
 [ext_resource path="res://assets/fonts/font_counter.tres" type="DynamicFont" id=7]
 [ext_resource path="res://scenes/item/buzzer/Buzzer.tscn" type="PackedScene" id=8]
 [ext_resource path="res://scenes/item/bg/Maze.tscn" type="PackedScene" id=9]
+[ext_resource path="res://scenes/item/fake/FakeBuzzers.tscn" type="PackedScene" id=10]
+
+[sub_resource type="Curve" id=4]
+_data = [ Vector2( 0, 1 ), 0.0, -0.0852752, 0, 0, Vector2( 1, 0.172727 ), -3.26753, 0.0, 0, 0 ]
 
 [sub_resource type="Animation" id=1]
 length = 0.001
@@ -84,6 +88,7 @@ extents = Vector2( 450, 20 )
 
 [node name="Game" type="Node2D"]
 script = ExtResource( 1 )
+shrink_curve = SubResource( 4 )
 duration = 4.0
 
 [node name="ColorRect" type="ColorRect" parent="."]
@@ -102,6 +107,8 @@ position = Vector2( 600, 650 )
 
 [node name="Maze" parent="BG" instance=ExtResource( 9 )]
 visible = false
+
+[node name="FakeBuzzers" parent="BG" instance=ExtResource( 10 )]
 
 [node name="Camera2D" type="Camera2D" parent="."]
 anchor_mode = 0

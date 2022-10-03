@@ -3,10 +3,7 @@ extends Node2D
 signal completed(time)
 signal failed()
 
-#var time : float = 0.0
 var remaining: float = 0.0
-var total_time : float = 0.0
-
 var game_started: bool = false
 var game_over: bool = false
 var press_count: int = 0
@@ -21,6 +18,7 @@ onready var fade : Fade = $"%Fade"
 onready var eptwalabha : Label = $"%Eptwalabha"
 onready var powerArea : PowerArea = $BG/PowerArea
 
+export(Curve) var shrink_curve
 export(float) var duration : float = 10.0
 export(float) var extra_time : float = 1.0
 
@@ -29,13 +27,13 @@ enum LEVEL {
 	INTRO,
 	INTRO2,
 	BOUNCE,
-	SHRINK,
 	SHRINK_BOUNCE,
-	FALLING_OBJECT,
-	FAKE,
-
-	NEED_POWER_MAZE,
 	TP_RANDOM,
+	FALLING_OBJECT,
+
+	SHRINK,
+	FAKE,
+	NEED_POWER_MAZE,
 	SMALL,
 	NO_CAP,
 	NEED_POWER,
@@ -48,6 +46,7 @@ enum LEVEL {
 }
 
 func _ready() -> void:
+	randomize()
 	count_down.hide()
 	buzzer.turn_light(true, true)
 	reset_all_items()
@@ -63,9 +62,17 @@ func _process(delta: float) -> void:
 			remaining = extra_time
 			buzzer.turn_light(false)
 			game_over()
+	
+	update_buzzer()
 	update_count_down()
 	remaining -= delta
 	Stats.total_time += delta
+
+func update_buzzer() -> void:
+	match press_count:
+		LEVEL.SHRINK:
+			var x = min(1.0, (duration - remaining) / duration)
+			buzzer.scale = b_scale * shrink_curve.interpolate(x)
 
 func update_count_down() -> void:
 	if remaining <= 0.0 or game_over:
@@ -91,7 +98,7 @@ func move_buzzer_at_random() -> void:
 	buzzer.global_position = random_position()
 
 func random_position() -> Vector2:
-	return Vector2(100, 200) + Vector2(600, 400) * randf()
+	return Vector2(100, 200) + Vector2(600 * randf(), 400 * randf())
 
 func reset_all_items() -> void:
 	for item in $BG.get_children():
@@ -139,6 +146,9 @@ func next_level() -> void:
 			buzzer.scale = Vector2(.15, .15)
 			buzzer.global_position = Vector2(200, 600)
 			new_buzzer_position = buzzer.global_position
+		LEVEL.FAKE:
+			$BG/FakeBuzzers.start()
+			new_buzzer_position = random_position()
 		_:
 			pass
 
