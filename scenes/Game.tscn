@@ -1,10 +1,11 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://scenes/Game.gd" type="Script" id=1]
 [ext_resource path="res://scenes/item/Button.tscn" type="PackedScene" id=2]
 [ext_resource path="res://assets/sound/booing-crowd.mp3" type="AudioStream" id=3]
 [ext_resource path="res://assets/sound/loosing.mp3" type="AudioStream" id=4]
 [ext_resource path="res://scenes/ui/Fade.tscn" type="PackedScene" id=5]
+[ext_resource path="res://scenes/item/StickyNote.tscn" type="PackedScene" id=6]
 
 [sub_resource type="Animation" id=1]
 length = 0.001
@@ -77,7 +78,6 @@ tracks/2/keys = {
 
 [node name="Game" type="Node2D"]
 script = ExtResource( 1 )
-duration = 5.0
 
 [node name="Button" parent="." instance=ExtResource( 2 )]
 position = Vector2( 512, 460 )
@@ -85,12 +85,18 @@ position = Vector2( 512, 460 )
 [node name="Camera2D" type="Camera2D" parent="Button"]
 offset = Vector2( 0, -150 )
 
+[node name="Sticky" parent="." instance=ExtResource( 6 )]
+
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
 [node name="Control" type="Control" parent="CanvasLayer"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 mouse_filter = 2
+__meta__ = {
+"_edit_group_": true,
+"_edit_lock_": true
+}
 
 [node name="CountDown" type="Label" parent="CanvasLayer/Control"]
 unique_name_in_owner = true

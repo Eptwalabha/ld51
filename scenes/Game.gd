@@ -31,15 +31,18 @@ func _process(delta: float) -> void:
 		button.light()
 		if abs(remaining) > allowed_delta :
 			remaining = allowed_delta
+			button.light(false)
 			game_over()
 	update_count_down()
 	remaining -= delta
 
 func update_count_down() -> void:
-	var count_sign : String = "" if remaining > 0 else "-"
-	var second : int = int(floor(abs(remaining)))
-	var milli : int = int(100.0 * fmod(abs(remaining), 1.0))
-	count_down.text = "%s%s.%s" % [count_sign, second, milli]
+	if remaining <= 0.0 or game_over:
+		count_down.text = "0.00"
+	else:
+		var second : int = int(floor(abs(remaining)))
+		var milli : int = int(100.0 * fmod(abs(remaining), 1.0))
+		count_down.text = "%s.%s" % [second, milli]
 
 func _on_Button_clicked() -> void:
 	press_count += 1
@@ -56,6 +59,8 @@ func start_game() -> void:
 	next_level()
 
 func next_level() -> void:
+	if press_count == 1:
+		$Sticky.fall()
 	game_started = true
 	button.reset()
 	remaining = duration

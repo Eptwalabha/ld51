@@ -25,7 +25,7 @@ func turn_light(on: bool, instant : bool = false) -> void:
 	_change_light(instant)
 
 func _change_light(instant : bool) -> void:
-	var color : Color = Color.white if light_on else Color("#a00")
+	var color : Color = Color.white if light_on else Color("#888")
 	if instant or !light_on:
 		cap.modulate = color
 	else:

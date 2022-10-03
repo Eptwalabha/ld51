@@ -22,7 +22,7 @@ position = Vector2( 0, 7 )
 texture = ExtResource( 3 )
 
 [node name="Cap" type="Sprite" parent="."]
-modulate = Color( 0.627451, 0, 0, 1 )
+modulate = Color( 0.564706, 0.564706, 0.564706, 1 )
 position = Vector2( 0, -50 )
 texture = ExtResource( 1 )
 
