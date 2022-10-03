@@ -10,14 +10,9 @@ config_version=4
 
 _global_script_classes=[ {
 "base": "Node2D",
-"class": "ButtonCap",
+"class": "Buzzer",
 "language": "GDScript",
-"path": "res://scenes/item/ButtonCap.gd"
-}, {
-"base": "Node2D",
-"class": "ButtonStick",
-"language": "GDScript",
-"path": "res://scenes/item/ButtonStick.gd"
+"path": "res://scenes/item/buzzer/Buzzer.gd"
 }, {
 "base": "Control",
 "class": "Fade",
@@ -27,19 +22,12 @@ _global_script_classes=[ {
 "base": "Node2D",
 "class": "StickyNote",
 "language": "GDScript",
-"path": "res://scenes/item/StickyNote.gd"
-}, {
-"base": "Node2D",
-"class": "TheButton",
-"language": "GDScript",
-"path": "res://scenes/item/Button.gd"
+"path": "res://scenes/item/sticky/StickyNote.gd"
 } ]
 _global_script_class_icons={
-"ButtonCap": "",
-"ButtonStick": "",
+"Buzzer": "",
 "Fade": "",
-"StickyNote": "",
-"TheButton": ""
+"StickyNote": ""
 }
 
 [application]
