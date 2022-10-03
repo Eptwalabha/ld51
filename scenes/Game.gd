@@ -25,29 +25,30 @@ export(float) var extra_time : float = 1.0
 enum LEVEL {
 	NOTHING,
 	INTRO,
-	FAKE_1,
-	FAKE_2,
-	FAKE_THE_RETURN,
 	INTRO2,
 	INTRO3,
 	BOUNCE,
-#	FALLING_OBJECT,
-
-	TP_RANDOM,
-	RANDOM_SHRINK_BOUNCE,
+	DONT_TURN_LIGHT,
 	RANDOM_BOUNCE,
-	SHRINK_BOUNCE,
-	SHRINK,
-	NEED_POWER_MAZE,
-	TINY,
-	TP_RANDOM_TINY,
+	FAKE_1,
 	NO_CAP,
 	NEED_POWER,
-	FALL,
+	SHRINK_BOUNCE,
+	TINY,
+#	FALLING_OBJECT,
+
+	FAKE_2,
 	NO_COUNTER,
-	DONT_TURN_LIGHT,
 	LIGHT_TOO_SOON,
+	TP_RANDOM,
+	FAKE_THE_RETURN,
+	FALL,
+	SHRINK,
+	TP_RANDOM_TINY,
 	IN_THE_DARK,
+	NEED_POWER_MAZE,
+	RANDOM_SHRINK_BOUNCE,
+	IDLE,
 	VICTORY
 }
 
@@ -149,7 +150,7 @@ func next_level() -> void:
 		LEVEL.IN_THE_DARK:
 			buzzer.in_the_dark()
 		LEVEL.LIGHT_TOO_SOON:
-			timer.start(duration - 1.0)
+			timer.start(duration - 2.0)
 		LEVEL.NEED_POWER:
 			new_buzzer_position = Vector2(150, 650)
 			buzzer.display_led = true
@@ -189,6 +190,11 @@ func next_level() -> void:
 			new_buzzer_position = random_position()
 			start_random_timer()
 		LEVEL.TP_RANDOM:
+			new_buzzer_position = random_position()
+			start_random_timer()
+		LEVEL.TP_RANDOM_TINY:
+			new_buzzer_position = random_position()
+			buzzer.scale = Vector2(.05, .05)
 			start_random_timer()
 		LEVEL.FAKE_1:
 			$BG/FakeBuzzers.start(0)
@@ -247,6 +253,7 @@ func dialog_key() -> String:
 		LEVEL.DONT_TURN_LIGHT: return "no-light"
 		LEVEL.LIGHT_TOO_SOON: return "too-soon"
 		LEVEL.IN_THE_DARK: return "pitch-black"
+		LEVEL.IDLE: return "idle"
 		_: return ""
 
 func game_over_key() -> String:
@@ -259,6 +266,8 @@ func game_over_key() -> String:
 			return "game-over-no-cap"
 		LEVEL.TINY, LEVEL.TP_RANDOM_TINY:
 			return "game-over-tiny"
+		LEVEL.IDLE:
+			return "game-over-idle"
 		_: return "game-over"
 
 # CALLBACKS
