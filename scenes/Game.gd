@@ -25,17 +25,19 @@ export(float) var extra_time : float = 1.0
 enum LEVEL {
 	NOTHING,
 	INTRO,
+	FAKE_1,
+	FAKE_2,
+	FAKE_THE_RETURN,
 	INTRO2,
 	INTRO3,
+	BOUNCE,
 #	FALLING_OBJECT,
 
 	TP_RANDOM,
 	RANDOM_SHRINK_BOUNCE,
 	RANDOM_BOUNCE,
-	BOUNCE,
 	SHRINK_BOUNCE,
 	SHRINK,
-	FAKE,
 	NEED_POWER_MAZE,
 	TINY,
 	TP_RANDOM_TINY,
@@ -188,8 +190,14 @@ func next_level() -> void:
 			start_random_timer()
 		LEVEL.TP_RANDOM:
 			start_random_timer()
-		LEVEL.FAKE:
-			$BG/FakeBuzzers.start()
+		LEVEL.FAKE_1:
+			$BG/FakeBuzzers.start(0)
+			new_buzzer_position = random_position()
+		LEVEL.FAKE_2:
+			$BG/FakeBuzzers.start(1)
+			new_buzzer_position = random_position()
+		LEVEL.FAKE_THE_RETURN:
+			$BG/FakeBuzzers.start(2)
 			new_buzzer_position = random_position()
 		_:
 			pass
@@ -247,6 +255,8 @@ func game_over_key() -> String:
 			return "game-over-intro"
 		LEVEL.LIGHT_TOO_SOON:
 			return "game-over-too-soon"
+		LEVEL.NO_CAP:
+			return "game-over-no-cap"
 		_: return "game-over"
 
 # CALLBACKS
