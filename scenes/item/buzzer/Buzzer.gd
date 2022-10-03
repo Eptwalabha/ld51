@@ -74,9 +74,13 @@ func _turn_light(on: bool, instant : bool) -> void:
 func _physics_process(delta: float) -> void:
 	if draggable and dragging:
 		velocity = Vector2.ZERO
-		global_position = lerp(global_position, get_global_mouse_position() + delta_drag, 20 * delta)
+		if physics_collision:
+			var diff = (get_global_mouse_position() - global_position) * (1.0 / scale.x)
+			move_and_slide(diff)
+		else:
+			global_position = lerp(global_position, get_global_mouse_position() + delta_drag, 50 * delta)
 	elif physic_enable:
-		velocity.y += delta * 10.0
+		velocity.y += delta * 8.0
 		move_and_collide(velocity)
 
 func update_buzzer_state() -> void:
@@ -85,7 +89,7 @@ func update_buzzer_state() -> void:
 	light.visible = with_cap
 	$Click/Cap.disabled = !with_cap
 	$Click/Stick.disabled = with_cap or !with_stick
-	$Physics.disabled = !physic_enable
+	$Physics.disabled = !physic_enable and !physics_collision
 	update_led()
 
 func update_led() -> void:
@@ -96,18 +100,20 @@ func update_led() -> void:
 func can_press() -> bool:
 	if pressing:
 		return false
-	return with_cap or with_stick
+	if powered:
+		return with_cap or with_stick
+	return false
 
 func do_press() -> void:
-	pressing = true
-	$AnimationPlayer.play("press")
-	if powered:
-		emit_signal("pressed")
+	if can_press():
+		pressing = true
+		$AnimationPlayer.play("press")
+		if powered:
+			emit_signal("pressed")
 
 func _on_Click_input_event(_viewport: Node, event: InputEvent, _shape_idx: int) -> void:
 	if event is InputEventMouseButton and event.is_pressed():
-		if can_press():
-			do_press()
+		do_press()
 
 func _on_AnimationPlayer_animation_finished(anim_name: String) -> void:
 	if anim_name == 'press':
@@ -131,3 +137,4 @@ func _on_Click_body_entered(body: Node) -> void:
 	if physic_enable or physics_collision:
 		if body != self:
 			do_press()
+

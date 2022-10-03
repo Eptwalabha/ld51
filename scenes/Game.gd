@@ -27,11 +27,15 @@ export(float) var extra_time : float = 1.0
 enum LEVEL {
 	NOTHING,
 	INTRO,
-	NEED_POWER_MAZE,
-	SMALL,
 	INTRO2,
-	MOVE_AROUND,
-	MOVE_AT_RANDOM,
+	BOUNCE,
+	SHRINK,
+	SHRINK_BOUNCE,
+	FALLING_OBJECT,
+
+	NEED_POWER_MAZE,
+	TP_RANDOM,
+	SMALL,
 	NO_CAP,
 	NEED_POWER,
 	FALL,
@@ -39,11 +43,13 @@ enum LEVEL {
 	DONT_TURN_LIGHT,
 	LIGHT_TOO_SOON,
 	IN_THE_DARK,
+	VICTORY
 }
 
 func _ready() -> void:
 	count_down.hide()
 	buzzer.turn_light(true, true)
+	reset_all_items()
 	fade.fade_in()
 
 func _process(delta: float) -> void:
@@ -58,6 +64,7 @@ func _process(delta: float) -> void:
 			game_over()
 	update_count_down()
 	remaining -= delta
+	Stats.total_time += delta
 
 func update_count_down() -> void:
 	if remaining <= 0.0 or game_over:
@@ -85,6 +92,10 @@ func move_buzzer_at_random() -> void:
 func random_position() -> Vector2:
 	return Vector2(100, 200) + Vector2(600, 400) * randf()
 
+func reset_all_items() -> void:
+	for item in $BG.get_children():
+		item.reset()
+
 func next_level() -> void:
 	buzzer.reset()
 	buzzer.rotation = 0
@@ -93,12 +104,15 @@ func next_level() -> void:
 	buzzer.scale = b_scale
 	count_down.visible = true
 	powerArea.visible = false
+	reset_all_items()
+
 	match press_count:
 		LEVEL.IN_THE_DARK:
 			buzzer.in_the_dark()
 		LEVEL.LIGHT_TOO_SOON:
 			$Timer.start(2.0)
 		LEVEL.NEED_POWER:
+			new_buzzer_position = Vector2(150, 650)
 			buzzer.display_led = true
 			powerArea.visible = true
 			buzzer.draggable = true
@@ -116,9 +130,17 @@ func next_level() -> void:
 		LEVEL.NO_CAP:
 			buzzer.with_cap = false
 		LEVEL.NEED_POWER_MAZE:
+			$BG/Maze.start()
+			buzzer.display_led = true
+			buzzer.powered = false
 			buzzer.draggable = true
-			buzzer.scale = Vector2(.1, .1)
-			buzzer.global_position = Vector2(200, 700)
+			buzzer.physics_collision = true
+			buzzer.scale = Vector2(.15, .15)
+			buzzer.global_position = Vector2(200, 600)
+			new_buzzer_position = buzzer.global_position
+		_:
+			pass
+
 	buzzer.global_position = new_buzzer_position
 	buzzer.update_buzzer_state()
 	level_end = false
@@ -126,13 +148,18 @@ func next_level() -> void:
 
 func game_over() -> void:
 	game_over = true
+	Stats.nbr_attempt += 1
 	$AnimationPlayer.play("loose")
 
+func power_buzzer(power: bool) -> void:
+	buzzer.powered = power
+	buzzer.update_led()
 
 # CALLBACKS
 
 func _on_Buzzer_pressed() -> void:
 	press_count += 1
+	Stats.nbr_click += 1
 	level_end = true
 	if !game_started:
 		sticky.fall()
@@ -145,10 +172,11 @@ func _on_Buzzer_pressed() -> void:
 			game_over()
 
 func _on_AnimationPlayer_animation_finished(anim_name: String) -> void:
-	var _osef = get_tree().change_scene("res://scenes/Game.tscn")
+	get_tree().reload_current_scene()
 
-func _on_Fade_finished(_fade_in: bool) -> void:
-	pass
+func _on_Fade_finished(fade_in: bool) -> void:
+	if !fade_in and press_count == LEVEL.VICTORY:
+		var _osef = get_tree().change_scene("res://scenes/Victory.tscn")
 
 func _on_Buzzer_drag_stopped() -> void:
 	pass
@@ -157,12 +185,16 @@ func _on_Buzzer_drag_started() -> void:
 	pass
 
 func _on_PowerArea_entered() -> void:
-	buzzer.powered = true
-	buzzer.update_led()
+	power_buzzer(true)
 
 func _on_PowerArea_exited() -> void:
-	buzzer.powered = false
-	buzzer.update_led()
+	power_buzzer(false)
+
+func _on_Maze_entered() -> void:
+	power_buzzer(true)
+
+func _on_Maze_exited() -> void:
+	power_buzzer(false)
 
 func _on_Timer_timeout() -> void:
 	match press_count:
@@ -177,7 +209,12 @@ func _on_Buzzer_hidden_in_the_dark() -> void:
 func _on_Buzzer_press_finished() -> void:
 	if game_over:
 		return
-	if press_count == LEVEL.INTRO:
-		start_game()
-	else:
-		next_level()
+	match press_count:
+		LEVEL.INTRO:
+			if !game_started:
+				start_game()
+		LEVEL.VICTORY:
+			fade.fade_out()
+		_:
+			next_level()
+

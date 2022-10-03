@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=2]
+[gd_scene load_steps=13 format=2]
 
 [ext_resource path="res://scenes/Game.gd" type="Script" id=1]
 [ext_resource path="res://scenes/item/bg/PowerArea.tscn" type="PackedScene" id=2]
@@ -8,6 +8,7 @@
 [ext_resource path="res://scenes/item/sticky/StickyNote.tscn" type="PackedScene" id=6]
 [ext_resource path="res://assets/fonts/font_counter.tres" type="DynamicFont" id=7]
 [ext_resource path="res://scenes/item/buzzer/Buzzer.tscn" type="PackedScene" id=8]
+[ext_resource path="res://scenes/item/bg/Maze.tscn" type="PackedScene" id=9]
 
 [sub_resource type="Animation" id=1]
 length = 0.001
@@ -83,7 +84,7 @@ extents = Vector2( 450, 20 )
 
 [node name="Game" type="Node2D"]
 script = ExtResource( 1 )
-duration = 3.0
+duration = 4.0
 
 [node name="ColorRect" type="ColorRect" parent="."]
 margin_left = -38.0
@@ -97,7 +98,10 @@ color = Color( 0, 0, 0, 1 )
 
 [node name="PowerArea" parent="BG" instance=ExtResource( 2 )]
 visible = false
-position = Vector2( 624, 242 )
+position = Vector2( 600, 650 )
+
+[node name="Maze" parent="BG" instance=ExtResource( 9 )]
+visible = false
 
 [node name="Camera2D" type="Camera2D" parent="."]
 anchor_mode = 0
@@ -220,6 +224,7 @@ shape = SubResource( 3 )
 
 [connection signal="entered" from="BG/PowerArea" to="." method="_on_PowerArea_entered"]
 [connection signal="exited" from="BG/PowerArea" to="." method="_on_PowerArea_exited"]
+[connection signal="entered" from="BG/Maze" to="." method="_on_Maze_entered"]
 [connection signal="drag_started" from="Buzzer" to="." method="_on_Buzzer_drag_started"]
 [connection signal="drag_stopped" from="Buzzer" to="." method="_on_Buzzer_drag_stopped"]
 [connection signal="hidden_in_the_dark" from="Buzzer" to="." method="_on_Buzzer_hidden_in_the_dark"]

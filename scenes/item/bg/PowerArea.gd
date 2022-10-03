@@ -4,6 +4,9 @@ extends Node2D
 signal entered
 signal exited
 
+func reset() -> void:
+	pass
+
 func _on_Area2D_area_entered(_area: Area2D) -> void:
 	if !visible:
 		return
