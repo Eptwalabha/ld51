@@ -2,8 +2,10 @@ class_name Buzzer
 extends Node2D
 
 signal pressed
+signal press_finished
 signal drag_started
 signal drag_stopped
+signal hidden_in_the_dark
 
 onready var light : Sprite = $"%Light"
 onready var tween : Tween = $Tween
@@ -27,6 +29,10 @@ func _ready() -> void:
 func reset() -> void:
 	with_cap = true
 	with_stick = true
+	draggable = false
+	dragging = false
+	update_buzzer_state()
+	$Buzzer/Pivot.modulate = Color.white
 	_turn_light(light_is_on, true)
 
 func play_sound(good: bool) -> void:
@@ -34,6 +40,12 @@ func play_sound(good: bool) -> void:
 		$Good.play()
 	else:
 		$Error.play()
+
+func in_the_dark() -> void:
+	tween.interpolate_property($Buzzer/Pivot, 'modulate', $Buzzer/Pivot.modulate, Color.black, 1.0)
+	tween.start()
+	yield(get_tree().create_timer(1.5), "timeout")
+	emit_signal("hidden_in_the_dark")
 
 func turn_light(on: bool = true, instant = false) -> void:
 	if !powered or on == light_is_on:
@@ -52,12 +64,12 @@ func _turn_light(on: bool, instant : bool) -> void:
 
 func _physics_process(delta: float) -> void:
 	if draggable and dragging:
-		global_position = lerp(global_position, get_global_mouse_position() + delta_drag, 10 * delta)
+		global_position = lerp(global_position, get_global_mouse_position() + delta_drag, 20 * delta)
 
 func update_buzzer_state() -> void:
 	cap.visible = with_cap
 	stick.visible = !with_cap and with_stick
-
+	light.visible = with_cap
 	$Buzzer/Click/Cap.disabled = !with_cap
 	$Buzzer/Click/Stick.disabled = with_cap or !with_stick
 
@@ -77,6 +89,7 @@ func _on_Click_input_event(_viewport: Node, event: InputEvent, _shape_idx: int) 
 func _on_AnimationPlayer_animation_finished(anim_name: String) -> void:
 	if anim_name == 'press':
 		pressing = false
+		emit_signal('press_finished')
 
 func _on_Base_input_event(viewport: Node, event: InputEvent, shape_idx: int) -> void:
 	if !draggable:

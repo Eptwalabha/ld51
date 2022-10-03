@@ -10,6 +10,7 @@ var total_time : float = 0.0
 var game_started: bool = false
 var game_over: bool = false
 var press_count: int = 0
+var level_end: bool = true
 
 onready var count_down : Label = $"%CountDown"
 onready var dialog : RichTextLabel = $"%Dialog"
@@ -17,9 +18,25 @@ onready var buzzer : Buzzer = $"%Buzzer"
 onready var sticky : StickyNote = $"%Sticky"
 onready var fade : Fade = $"%Fade"
 onready var eptwalabha : Label = $"%Eptwalabha"
+onready var powerArea : PowerArea = $BG/PowerArea
 
 export(float) var duration : float = 10.0
 export(float) var extra_time : float = 1.0
+
+enum LEVEL {
+	NOTHING,
+	INTRO,
+	NEED_POWER,
+	NO_CAP,
+	INTRO2,
+	MOVE1,
+	MOVE2,
+	NO_COUNTER,
+	DONT_TURN_LIGHT,
+	MOVE_RANDOM,
+	LIGHT_TOO_SOON,
+	IN_THE_DARK,
+}
 
 func _ready() -> void:
 	count_down.hide()
@@ -27,11 +44,11 @@ func _ready() -> void:
 	fade.fade_in()
 
 func _process(delta: float) -> void:
-	if !game_started or game_over:
+	if !game_started or game_over or level_end:
 		return
 
 	if remaining <= 0:
-		buzzer.turn_light()
+		turn_on_buzzer_light()
 		if abs(remaining) > extra_time :
 			remaining = extra_time
 			buzzer.turn_light(false)
@@ -49,29 +66,55 @@ func update_count_down() -> void:
 
 func _on_Buzzer_pressed() -> void:
 	press_count += 1
+	level_end = true
 	if !game_started:
+		sticky.fall()
 		buzzer.play_sound(true)
-		start_game()
 	else:
 		if remaining <= 0 and (abs(remaining) <= extra_time):
 			buzzer.play_sound(true)
-			next_level()
 		else:
 			buzzer.play_sound(false)
 			game_over()
 
 func start_game() -> void:
 	eptwalabha.visible = false
+	game_started = true
 	next_level()
 
+func turn_on_buzzer_light() -> void:
+	match press_count:
+		LEVEL.DONT_TURN_LIGHT:
+			pass
+		_:
+			buzzer.turn_light()
+
+func move_buzzer_at_random() -> void:
+	buzzer.global_position = Vector2(100, 200) + Vector2(600, 400) * randf()
+
 func next_level() -> void:
-	if press_count == 1:
-		sticky.fall()
-	game_started = true
 	buzzer.reset()
+	var new_buzzer_position: = Vector2(400, 600)
 	buzzer.turn_light(false)
-	remaining = duration
 	count_down.visible = true
+	powerArea.visible = false
+	match press_count:
+		LEVEL.IN_THE_DARK:
+			buzzer.in_the_dark()
+		LEVEL.LIGHT_TOO_SOON:
+			$Timer.start(2.0)
+		LEVEL.NEED_POWER:
+			powerArea.visible = true
+			buzzer.draggable = true
+			buzzer.powered = false
+		LEVEL.NO_COUNTER:
+			count_down.visible = false
+		LEVEL.NO_CAP:
+			buzzer.with_cap = false
+			buzzer.update_buzzer_state()
+	buzzer.global_position = new_buzzer_position
+	level_end = false
+	remaining = duration
 
 func game_over() -> void:
 	game_over = true
@@ -83,9 +126,32 @@ func _on_AnimationPlayer_animation_finished(anim_name: String) -> void:
 func _on_Fade_finished(_fade_in: bool) -> void:
 	pass
 
-
 func _on_Buzzer_drag_stopped() -> void:
-	print("poc!")
+	pass
 
 func _on_Buzzer_drag_started() -> void:
 	pass
+
+func _on_PowerArea_entered() -> void:
+	buzzer.powered = true
+
+func _on_PowerArea_exited() -> void:
+	buzzer.powered = false
+
+func _on_Timer_timeout() -> void:
+	match press_count:
+		LEVEL.LIGHT_TOO_SOON:
+			buzzer.turn_light(true)
+
+func _on_Buzzer_hidden_in_the_dark() -> void:
+	match press_count:
+		LEVEL.IN_THE_DARK:
+			move_buzzer_at_random()
+
+func _on_Buzzer_press_finished() -> void:
+	if game_over:
+		return
+	if press_count == LEVEL.INTRO:
+		start_game()
+	else:
+		next_level()

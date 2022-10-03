@@ -20,6 +20,11 @@ _global_script_classes=[ {
 "path": "res://scenes/ui/Fade.gd"
 }, {
 "base": "Node2D",
+"class": "PowerArea",
+"language": "GDScript",
+"path": "res://scenes/item/bg/PowerArea.gd"
+}, {
+"base": "Node2D",
 "class": "StickyNote",
 "language": "GDScript",
 "path": "res://scenes/item/sticky/StickyNote.gd"
@@ -27,6 +32,7 @@ _global_script_classes=[ {
 _global_script_class_icons={
 "Buzzer": "",
 "Fade": "",
+"PowerArea": "",
 "StickyNote": ""
 }
 
@@ -35,6 +41,10 @@ _global_script_class_icons={
 config/name="ld51b"
 run/main_scene="res://scenes/Game.tscn"
 config/icon="res://icon.png"
+
+[autoload]
+
+Dialogs="*res://script/dialogs.gd"
 
 [display]
 

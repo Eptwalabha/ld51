@@ -1,6 +1,7 @@
-[gd_scene load_steps=11 format=2]
+[gd_scene load_steps=12 format=2]
 
 [ext_resource path="res://scenes/Game.gd" type="Script" id=1]
+[ext_resource path="res://scenes/item/bg/PowerArea.tscn" type="PackedScene" id=2]
 [ext_resource path="res://assets/sound/booing-crowd.mp3" type="AudioStream" id=3]
 [ext_resource path="res://assets/sound/loosing.mp3" type="AudioStream" id=4]
 [ext_resource path="res://scenes/ui/Fade.tscn" type="PackedScene" id=5]
@@ -84,18 +85,32 @@ extents = Vector2( 450, 20 )
 script = ExtResource( 1 )
 duration = 3.0
 
+[node name="ColorRect" type="ColorRect" parent="."]
+margin_left = -38.0
+margin_top = -44.0
+margin_right = 852.0
+margin_bottom = 846.0
+mouse_filter = 2
+color = Color( 0, 0, 0, 1 )
+
+[node name="BG" type="Node2D" parent="."]
+
+[node name="PowerArea" parent="BG" instance=ExtResource( 2 )]
+visible = false
+position = Vector2( 624, 242 )
+
 [node name="Camera2D" type="Camera2D" parent="."]
 anchor_mode = 0
 current = true
 
 [node name="Buzzer" parent="." instance=ExtResource( 8 )]
 unique_name_in_owner = true
-position = Vector2( 400, 585 )
+position = Vector2( 400, 600 )
 scale = Vector2( 0.5, 0.5 )
 
 [node name="Sticky" parent="." instance=ExtResource( 6 )]
 unique_name_in_owner = true
-position = Vector2( 350, 517 )
+position = Vector2( 350, 530 )
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
@@ -201,8 +216,14 @@ position = Vector2( 800, 400 )
 rotation = 1.57079
 shape = SubResource( 3 )
 
+[node name="Timer" type="Timer" parent="."]
+
+[connection signal="entered" from="BG/PowerArea" to="." method="_on_PowerArea_entered"]
 [connection signal="drag_started" from="Buzzer" to="." method="_on_Buzzer_drag_started"]
 [connection signal="drag_stopped" from="Buzzer" to="." method="_on_Buzzer_drag_stopped"]
+[connection signal="hidden_in_the_dark" from="Buzzer" to="." method="_on_Buzzer_hidden_in_the_dark"]
+[connection signal="press_finished" from="Buzzer" to="." method="_on_Buzzer_press_finished"]
 [connection signal="pressed" from="Buzzer" to="." method="_on_Buzzer_pressed"]
 [connection signal="finished" from="CanvasLayer/Control/Fade" to="." method="_on_Fade_finished"]
 [connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_AnimationPlayer_animation_finished"]
+[connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]
