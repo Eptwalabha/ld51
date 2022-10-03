@@ -12,7 +12,7 @@
 [ext_resource path="res://scenes/item/fake/FakeBuzzers.tscn" type="PackedScene" id=10]
 
 [sub_resource type="Curve" id=4]
-_data = [ Vector2( 0, 1 ), 0.0, -0.0852752, 0, 0, Vector2( 1, 0.172727 ), -3.26753, 0.0, 0, 0 ]
+_data = [ Vector2( 0, 1 ), 0.0, -0.0852752, 0, 0, Vector2( 1, 0.290909 ), -2.35454, 0.0, 0, 0 ]
 
 [sub_resource type="Animation" id=1]
 length = 0.001
@@ -229,6 +229,8 @@ shape = SubResource( 3 )
 
 [node name="Timer" type="Timer" parent="."]
 
+[node name="Random" type="Timer" parent="."]
+
 [connection signal="entered" from="BG/PowerArea" to="." method="_on_PowerArea_entered"]
 [connection signal="exited" from="BG/PowerArea" to="." method="_on_PowerArea_exited"]
 [connection signal="entered" from="BG/Maze" to="." method="_on_Maze_entered"]
@@ -240,3 +242,4 @@ shape = SubResource( 3 )
 [connection signal="finished" from="CanvasLayer/Control/Fade" to="." method="_on_Fade_finished"]
 [connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_AnimationPlayer_animation_finished"]
 [connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]
+[connection signal="timeout" from="Random" to="." method="_on_Random_timeout"]

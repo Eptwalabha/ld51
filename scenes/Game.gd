@@ -9,6 +9,8 @@ var game_over: bool = false
 var press_count: int = 0
 var level_end: bool = true
 var b_scale: Vector2 = Vector2(.5, .5)
+var bouncing_direction: Vector2 = Vector2.UP
+var moving_speed : float = 200.0
 
 onready var count_down : Label = $"%CountDown"
 onready var dialog : RichTextLabel = $"%Dialog"
@@ -25,12 +27,14 @@ export(float) var extra_time : float = 1.0
 enum LEVEL {
 	NOTHING,
 	INTRO,
+	FALLING_OBJECT,
 	INTRO2,
+	TP_RANDOM,
+
+	RANDOM_BOUNCE,
+	RANDOM_SHRINK_BOUNCE,
 	BOUNCE,
 	SHRINK_BOUNCE,
-	TP_RANDOM,
-	FALLING_OBJECT,
-
 	SHRINK,
 	FAKE,
 	NEED_POWER_MAZE,
@@ -62,17 +66,38 @@ func _process(delta: float) -> void:
 			remaining = extra_time
 			buzzer.turn_light(false)
 			game_over()
-	
-	update_buzzer()
+
+	update_buzzer(delta)
 	update_count_down()
 	remaining -= delta
 	Stats.total_time += delta
 
-func update_buzzer() -> void:
+func update_buzzer(delta: float) -> void:
 	match press_count:
 		LEVEL.SHRINK:
-			var x = min(1.0, (duration - remaining) / duration)
-			buzzer.scale = b_scale * shrink_curve.interpolate(x)
+			update_buzzer_scale()
+		LEVEL.BOUNCE, LEVEL.RANDOM_BOUNCE:
+			bounce_buzzer(delta)
+		LEVEL.SHRINK_BOUNCE, LEVEL.RANDOM_SHRINK_BOUNCE:
+			update_buzzer_scale()
+			bounce_buzzer(delta)
+
+func update_buzzer_scale() -> void:
+	var x = min(1.0, (duration - remaining) / duration)
+	buzzer.scale = b_scale * shrink_curve.interpolate(x)
+
+func bounce_buzzer(delta: float) -> void:
+	var next_position : Vector2 = buzzer.global_position + bouncing_direction * delta * moving_speed
+	if next_position.x < 150 and bouncing_direction.x < 0 \
+		or next_position.x > 650 and bouncing_direction.x > 0.0:
+		bouncing_direction.x *= -1
+	if next_position.y < 200 and bouncing_direction.y < 0 \
+		or next_position.y > 700 and bouncing_direction.y > 0.0:
+		bouncing_direction.y *= -1
+	buzzer.global_position = next_position
+
+func start_random_timer() -> void:
+	$Random.start(randf() * 1.5 + .5)
 
 func update_count_down() -> void:
 	if remaining <= 0.0 or game_over:
@@ -100,7 +125,11 @@ func move_buzzer_at_random() -> void:
 func random_position() -> Vector2:
 	return Vector2(100, 200) + Vector2(600 * randf(), 400 * randf())
 
+func random_direction() -> Vector2:
+	return (Vector2(1 - randf() * 2, 1 - randf() * 2)).normalized()
+
 func reset_all_items() -> void:
+	$Random.stop()
 	for item in $BG.get_children():
 		item.reset()
 
@@ -146,6 +175,17 @@ func next_level() -> void:
 			buzzer.scale = Vector2(.15, .15)
 			buzzer.global_position = Vector2(200, 600)
 			new_buzzer_position = buzzer.global_position
+		LEVEL.SHRINK_BOUNCE, LEVEL.BOUNCE:
+			bouncing_direction = random_direction()
+			new_buzzer_position = random_position()
+		LEVEL.RANDOM_BOUNCE:
+			bouncing_direction = random_direction()
+			new_buzzer_position = random_position()
+			start_random_timer()
+		LEVEL.RANDOM_SHRINK_BOUNCE:
+			bouncing_direction = random_direction()
+			new_buzzer_position = random_position()
+			start_random_timer()
 		LEVEL.FAKE:
 			$BG/FakeBuzzers.start()
 			new_buzzer_position = random_position()
@@ -229,3 +269,8 @@ func _on_Buzzer_press_finished() -> void:
 		_:
 			next_level()
 
+func _on_Random_timeout() -> void:
+	match press_count:
+		LEVEL.RANDOM_BOUNCE, LEVEL.RANDOM_SHRINK_BOUNCE:
+			bouncing_direction = random_direction()
+			start_random_timer()
