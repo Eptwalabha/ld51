@@ -10,7 +10,7 @@ var bouncing_direction: Vector2 = Vector2.UP
 var moving_speed : float = 200.0
 
 onready var count_down : Label = $"%CountDown"
-onready var dialog : RichTextLabel = $"%Dialog"
+onready var dialog : Label = $"%Dialog"
 onready var buzzer : Buzzer = $"%Buzzer"
 onready var sticky : StickyNote = $"%Sticky"
 onready var fade : Fade = $"%Fade"
@@ -25,10 +25,11 @@ export(float) var extra_time : float = 1.0
 enum LEVEL {
 	NOTHING,
 	INTRO,
+	INTRO2,
+	INTRO3,
 #	FALLING_OBJECT,
 
 	TP_RANDOM,
-	INTRO2,
 	RANDOM_SHRINK_BOUNCE,
 	RANDOM_BOUNCE,
 	BOUNCE,
@@ -36,7 +37,8 @@ enum LEVEL {
 	SHRINK,
 	FAKE,
 	NEED_POWER_MAZE,
-	SMALL,
+	TINY,
+	TP_RANDOM_TINY,
 	NO_CAP,
 	NEED_POWER,
 	FALL,
@@ -127,7 +129,7 @@ func random_direction() -> Vector2:
 	return (Vector2(1 - randf() * 2, 1 - randf() * 2)).normalized()
 
 func reset_all_items() -> void:
-	$Random.stop()
+	timer.stop()
 	for item in $BG.get_children():
 		item.reset()
 
@@ -152,7 +154,7 @@ func next_level() -> void:
 			powerArea.visible = true
 			buzzer.draggable = true
 			buzzer.powered = false
-		LEVEL.SMALL:
+		LEVEL.TINY:
 			new_buzzer_position = random_position()
 			buzzer.scale = Vector2(.05, .05)
 		LEVEL.FALL:
@@ -192,6 +194,11 @@ func next_level() -> void:
 		_:
 			pass
 
+	var key = dialog_key()
+	dialog.visible = key != ""
+	if key != "":
+		dialog.text = tr("level-%s" % key)
+		
 	buzzer.global_position = new_buzzer_position
 	buzzer.update_buzzer_state()
 	level_end = false
@@ -200,11 +207,47 @@ func next_level() -> void:
 func trigger_game_over() -> void:
 	game_over = true
 	Stats.nbr_attempt += 1
+	dialog.text = tr(game_over_key())
 	$AnimationPlayer.play("loose")
 
 func power_buzzer(power: bool) -> void:
 	buzzer.powered = power
 	buzzer.update_led()
+
+func dialog_key() -> String:
+	match press_count:
+		LEVEL.INTRO: return "intro-01"
+		LEVEL.INTRO2: return "intro-02"
+		LEVEL.INTRO3: return "intro-03"
+	#	LEVEL.FALLING_OBJECT: return "falling-object"
+		LEVEL.TP_RANDOM: return "td-random"
+		LEVEL.RANDOM_SHRINK_BOUNCE: return "random-shrink-bounce"
+		LEVEL.RANDOM_BOUNCE: return "random-bounce"
+		LEVEL.BOUNCE: return "bounce"
+		LEVEL.SHRINK_BOUNCE: return "shrink-bounce"
+		LEVEL.SHRINK: return "shrink"
+		LEVEL.FAKE_1: return "fake-01"
+		LEVEL.FAKE_2: return "fake-02"
+		LEVEL.FAKE_THE_RETURN: return "fake-03"
+		LEVEL.NEED_POWER_MAZE: return "power-maze"
+		LEVEL.TINY: return "tiny"
+		LEVEL.TP_RANDOM_TINY: return "tp-random-tiny"
+		LEVEL.NO_CAP: return "no-cap"
+		LEVEL.NEED_POWER: return "need-power"
+		LEVEL.FALL: return "fall"
+		LEVEL.NO_COUNTER: return "no-counter"
+		LEVEL.DONT_TURN_LIGHT: return "no-light"
+		LEVEL.LIGHT_TOO_SOON: return "too-soon"
+		LEVEL.IN_THE_DARK: return "pitch-black"
+		_: return ""
+
+func game_over_key() -> String:
+	match press_count:
+		LEVEL.INTRO, LEVEL.INTRO2, LEVEL.INTRO2:
+			return "game-over-intro"
+		LEVEL.LIGHT_TOO_SOON:
+			return "game-over-too-soon"
+		_: return "game-over"
 
 # CALLBACKS
 
@@ -254,7 +297,7 @@ func _on_Timer_timeout() -> void:
 		LEVEL.RANDOM_BOUNCE, LEVEL.RANDOM_SHRINK_BOUNCE:
 			bouncing_direction = random_direction()
 			start_random_timer()
-		LEVEL.TP_RANDOM:
+		LEVEL.TP_RANDOM, LEVEL.TP_RANDOM_TINY:
 			buzzer.global_position = random_position()
 			if remaining >= 1.0:
 				start_random_timer()

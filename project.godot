@@ -86,6 +86,11 @@ touch={
  ]
 }
 
+[locale]
+
+translations=PoolStringArray( "res://assets/trad/traduction.en.translation" )
+locale_filter=[ 0, [ "en" ] ]
+
 [physics]
 
 common/enable_pause_aware_picking=true
