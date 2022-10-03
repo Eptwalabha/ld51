@@ -1,9 +1,10 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://scenes/Game.gd" type="Script" id=1]
 [ext_resource path="res://scenes/item/Button.tscn" type="PackedScene" id=2]
 [ext_resource path="res://assets/sound/booing-crowd.mp3" type="AudioStream" id=3]
 [ext_resource path="res://assets/sound/loosing.mp3" type="AudioStream" id=4]
+[ext_resource path="res://scenes/ui/Fade.tscn" type="PackedScene" id=5]
 
 [sub_resource type="Animation" id=1]
 length = 0.001
@@ -34,7 +35,7 @@ tracks/1/keys = {
 
 [sub_resource type="Animation" id=2]
 resource_name = "loose"
-length = 5.0
+length = 5.5
 tracks/0/type = "value"
 tracks/0/path = NodePath("Loose:playing")
 tracks/0/interp = 1
@@ -59,6 +60,20 @@ tracks/1/keys = {
 "update": 1,
 "values": [ true ]
 }
+tracks/2/type = "method"
+tracks/2/path = NodePath("CanvasLayer/Control/Fade")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 4 ),
+"transitions": PoolRealArray( 1 ),
+"values": [ {
+"args": [ false ],
+"method": "fade_out"
+} ]
+}
 
 [node name="Game" type="Node2D"]
 script = ExtResource( 1 )
@@ -77,14 +92,6 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 mouse_filter = 2
 
-[node name="Dialog" type="Label" parent="CanvasLayer/Control"]
-anchor_right = 1.0
-margin_top = 211.0
-margin_bottom = 328.0
-text = "dialog"
-align = 1
-valign = 1
-
 [node name="CountDown" type="Label" parent="CanvasLayer/Control"]
 unique_name_in_owner = true
 anchor_left = 0.5
@@ -94,6 +101,29 @@ margin_top = 41.0
 margin_right = 256.5
 margin_bottom = 158.0
 text = "dialog"
+align = 1
+valign = 1
+
+[node name="Fade" parent="CanvasLayer/Control" instance=ExtResource( 5 )]
+duration = 1.0
+
+[node name="Dialog" type="Label" parent="CanvasLayer/Control"]
+visible = false
+anchor_right = 1.0
+margin_top = 211.0
+margin_bottom = 328.0
+text = "dialog"
+align = 1
+valign = 1
+
+[node name="Eptwalabha" type="Label" parent="CanvasLayer/Control"]
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -282.0
+margin_top = -38.0
+text = "ld51 @eptwalabha"
 align = 1
 valign = 1
 
@@ -111,4 +141,5 @@ anims/loose = SubResource( 2 )
 position = Vector2( 512, 460 )
 
 [connection signal="clicked" from="Button" to="." method="_on_Button_clicked"]
+[connection signal="finished" from="CanvasLayer/Control/Fade" to="." method="_on_Fade_finished"]
 [connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_AnimationPlayer_animation_finished"]

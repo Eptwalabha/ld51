@@ -6,8 +6,8 @@ signal clicked
 export(bool) var visible_stick := false
 export(bool) var light_on := true
 
-onready var stick : Sprite = $Area2D/Stick
-onready var cap : Sprite = $Area2D/Cap
+onready var stick : Sprite = $Stick
+onready var cap : Sprite = $Cap
 onready var tween : Tween = $Tween
 
 func _ready() -> void:
