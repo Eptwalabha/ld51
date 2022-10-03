@@ -1,8 +1,5 @@
 extends Node2D
 
-signal completed(time)
-signal failed()
-
 var remaining: float = 0.0
 var game_started: bool = false
 var game_over: bool = false
@@ -27,12 +24,12 @@ export(float) var extra_time : float = 1.0
 enum LEVEL {
 	NOTHING,
 	INTRO,
-	FALLING_OBJECT,
-	INTRO2,
 	TP_RANDOM,
+	FALLING_OBJECT,
 
-	RANDOM_BOUNCE,
+	INTRO2,
 	RANDOM_SHRINK_BOUNCE,
+	RANDOM_BOUNCE,
 	BOUNCE,
 	SHRINK_BOUNCE,
 	SHRINK,
@@ -65,7 +62,7 @@ func _process(delta: float) -> void:
 		if abs(remaining) > extra_time :
 			remaining = extra_time
 			buzzer.turn_light(false)
-			game_over()
+			trigger_game_over()
 
 	update_buzzer(delta)
 	update_count_down()
@@ -186,6 +183,8 @@ func next_level() -> void:
 			bouncing_direction = random_direction()
 			new_buzzer_position = random_position()
 			start_random_timer()
+		LEVEL.TP_RANDOM:
+			start_random_timer()
 		LEVEL.FAKE:
 			$BG/FakeBuzzers.start()
 			new_buzzer_position = random_position()
@@ -197,7 +196,7 @@ func next_level() -> void:
 	level_end = false
 	remaining = duration
 
-func game_over() -> void:
+func trigger_game_over() -> void:
 	game_over = true
 	Stats.nbr_attempt += 1
 	$AnimationPlayer.play("loose")
@@ -220,10 +219,10 @@ func _on_Buzzer_pressed() -> void:
 			buzzer.play_sound(true)
 		else:
 			buzzer.play_sound(false)
-			game_over()
+			trigger_game_over()
 
-func _on_AnimationPlayer_animation_finished(anim_name: String) -> void:
-	get_tree().reload_current_scene()
+func _on_AnimationPlayer_animation_finished(_anim_name: String) -> void:
+	var _osef = get_tree().reload_current_scene()
 
 func _on_Fade_finished(fade_in: bool) -> void:
 	if !fade_in and press_count == LEVEL.VICTORY:
@@ -274,3 +273,7 @@ func _on_Random_timeout() -> void:
 		LEVEL.RANDOM_BOUNCE, LEVEL.RANDOM_SHRINK_BOUNCE:
 			bouncing_direction = random_direction()
 			start_random_timer()
+		LEVEL.TP_RANDOM:
+			buzzer.global_position = random_position()
+			if remaining >= 1.0:
+				start_random_timer()

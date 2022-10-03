@@ -12,7 +12,7 @@
 [ext_resource path="res://scenes/item/fake/FakeBuzzers.tscn" type="PackedScene" id=10]
 
 [sub_resource type="Curve" id=4]
-_data = [ Vector2( 0, 1 ), 0.0, -0.0852752, 0, 0, Vector2( 1, 0.290909 ), -2.35454, 0.0, 0, 0 ]
+_data = [ Vector2( 0, 1 ), 0.0, -0.0852752, 0, 0, Vector2( 1, 0.454545 ), -1.68182, 0.0, 0, 0 ]
 
 [sub_resource type="Animation" id=1]
 length = 0.001
@@ -230,6 +230,7 @@ shape = SubResource( 3 )
 [node name="Timer" type="Timer" parent="."]
 
 [node name="Random" type="Timer" parent="."]
+one_shot = true
 
 [connection signal="entered" from="BG/PowerArea" to="." method="_on_PowerArea_entered"]
 [connection signal="exited" from="BG/PowerArea" to="." method="_on_PowerArea_exited"]

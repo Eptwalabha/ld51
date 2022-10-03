@@ -120,7 +120,7 @@ func _on_AnimationPlayer_animation_finished(anim_name: String) -> void:
 		pressing = false
 		emit_signal('press_finished')
 
-func _on_Base_input_event(viewport: Node, event: InputEvent, shape_idx: int) -> void:
+func _on_Base_input_event(_viewport: Node, event: InputEvent, _shape_idx: int) -> void:
 	if !draggable:
 		return
 	if event is InputEventMouseButton:
