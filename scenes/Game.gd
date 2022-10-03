@@ -257,6 +257,8 @@ func game_over_key() -> String:
 			return "game-over-too-soon"
 		LEVEL.NO_CAP:
 			return "game-over-no-cap"
+		LEVEL.TINY, LEVEL.TP_RANDOM_TINY:
+			return "game-over-tiny"
 		_: return "game-over"
 
 # CALLBACKS
