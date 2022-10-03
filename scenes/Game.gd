@@ -12,11 +12,14 @@ var game_over: bool = false
 var press_count: int = 0
 
 onready var count_down : Label = $"%CountDown"
-onready var button : TheButton = $Button
-onready var fade : Fade = $CanvasLayer/Control/Fade
+onready var dialog : RichTextLabel = $"%Dialog"
+onready var button : TheButton = $"%Buzzer"
+onready var sticky : StickyNote = $"%Sticky"
+onready var fade : Fade = $"%Fade"
+onready var eptwalabha : Label = $"%Eptwalabha"
 
 export(float) var duration : float = 10.0
-export(float) var allowed_delta : float = 1.0
+export(float) var extra_time : float = 1.0
 
 func _ready() -> void:
 	count_down.hide()
@@ -29,8 +32,8 @@ func _process(delta: float) -> void:
 	
 	if remaining <= 0:
 		button.light()
-		if abs(remaining) > allowed_delta :
-			remaining = allowed_delta
+		if abs(remaining) > extra_time :
+			remaining = extra_time
 			button.light(false)
 			game_over()
 	update_count_down()
@@ -49,18 +52,18 @@ func _on_Button_clicked() -> void:
 	if !game_started:
 		start_game()
 	else:
-		if remaining <= 0 and (abs(remaining) <= allowed_delta):
+		if remaining <= 0 and (abs(remaining) <= extra_time):
 			next_level()
 		else:
 			game_over()
 
 func start_game() -> void:
-	$CanvasLayer/Control/Eptwalabha.visible = false
+	eptwalabha.visible = false
 	next_level()
 
 func next_level() -> void:
 	if press_count == 1:
-		$Sticky.fall()
+		sticky.fall()
 	game_started = true
 	button.reset()
 	remaining = duration
@@ -71,7 +74,7 @@ func game_over() -> void:
 	$AnimationPlayer.play("loose")
 
 func _on_AnimationPlayer_animation_finished(anim_name: String) -> void:
-	get_tree().change_scene("res://scenes/Game.tscn")
+	var _osef = get_tree().change_scene("res://scenes/Game.tscn")
 
-func _on_Fade_finished(fade_in: bool) -> void:
+func _on_Fade_finished(_fade_in: bool) -> void:
 	pass

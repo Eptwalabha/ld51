@@ -24,7 +24,7 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://scenes/ui/Fade.gd"
 }, {
-"base": "Sprite",
+"base": "Node2D",
 "class": "StickyNote",
 "language": "GDScript",
 "path": "res://scenes/item/StickyNote.gd"
@@ -50,7 +50,10 @@ config/icon="res://icon.png"
 
 [display]
 
+window/size/width=800
+window/size/height=800
 window/stretch/mode="viewport"
+window/stretch/aspect="keep"
 
 [gui]
 

@@ -1,5 +1,5 @@
 class_name StickyNote
-extends Sprite
+extends Node2D
 
 func fall() -> void:
 	$AnimationPlayer.play("fall")
