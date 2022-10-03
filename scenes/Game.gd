@@ -11,6 +11,7 @@ var game_started: bool = false
 var game_over: bool = false
 var press_count: int = 0
 var level_end: bool = true
+var b_scale: Vector2 = Vector2(.5, .5)
 
 onready var count_down : Label = $"%CountDown"
 onready var dialog : RichTextLabel = $"%Dialog"
@@ -26,11 +27,14 @@ export(float) var extra_time : float = 1.0
 enum LEVEL {
 	NOTHING,
 	INTRO,
+	NEED_POWER_MAZE,
+	SMALL,
 	INTRO2,
 	MOVE_AROUND,
 	MOVE_AT_RANDOM,
 	NO_CAP,
 	NEED_POWER,
+	FALL,
 	NO_COUNTER,
 	DONT_TURN_LIGHT,
 	LIGHT_TOO_SOON,
@@ -76,13 +80,17 @@ func turn_on_buzzer_light() -> void:
 			buzzer.turn_light()
 
 func move_buzzer_at_random() -> void:
-	buzzer.global_position = Vector2(100, 200) + Vector2(600, 400) * randf()
+	buzzer.global_position = random_position()
+
+func random_position() -> Vector2:
+	return Vector2(100, 200) + Vector2(600, 400) * randf()
 
 func next_level() -> void:
 	buzzer.reset()
 	buzzer.rotation = 0
 	var new_buzzer_position: = Vector2(400, 600)
 	buzzer.turn_light(false)
+	buzzer.scale = b_scale
 	count_down.visible = true
 	powerArea.visible = false
 	match press_count:
@@ -95,10 +103,22 @@ func next_level() -> void:
 			powerArea.visible = true
 			buzzer.draggable = true
 			buzzer.powered = false
+		LEVEL.SMALL:
+			new_buzzer_position = random_position()
+			buzzer.scale = Vector2(.05, .05)
+		LEVEL.FALL:
+			buzzer.draggable = true
+			buzzer.physic_enable = true
+			new_buzzer_position = Vector2(400, 200)
+			buzzer.rotation = PI
 		LEVEL.NO_COUNTER:
 			count_down.visible = false
 		LEVEL.NO_CAP:
 			buzzer.with_cap = false
+		LEVEL.NEED_POWER_MAZE:
+			buzzer.draggable = true
+			buzzer.scale = Vector2(.1, .1)
+			buzzer.global_position = Vector2(200, 700)
 	buzzer.global_position = new_buzzer_position
 	buzzer.update_buzzer_state()
 	level_end = false

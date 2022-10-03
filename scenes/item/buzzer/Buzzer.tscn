@@ -16,7 +16,7 @@ blend_mode = 1
 [sub_resource type="Animation" id=2]
 length = 0.001
 tracks/0/type = "value"
-tracks/0/path = NodePath("Buzzer/Pivot/Button-base/Button-cap:position")
+tracks/0/path = NodePath("Pivot/Button-base/Button-cap:position")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/imported = false
@@ -28,7 +28,7 @@ tracks/0/keys = {
 "values": [ Vector2( 0, -140 ) ]
 }
 tracks/1/type = "value"
-tracks/1/path = NodePath("Buzzer/Pivot/Button-base/Button-stick:position")
+tracks/1/path = NodePath("Pivot/Button-base/Button-stick:position")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/imported = false
@@ -44,7 +44,7 @@ tracks/1/keys = {
 resource_name = "press"
 length = 0.5
 tracks/0/type = "value"
-tracks/0/path = NodePath("Buzzer/Pivot/Button-base/Button-stick:position")
+tracks/0/path = NodePath("Pivot/Button-base/Button-stick:position")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/imported = false
@@ -56,7 +56,7 @@ tracks/0/keys = {
 "values": [ Vector2( 0, -80 ), Vector2( 0, -40 ), Vector2( 0, -80 ) ]
 }
 tracks/1/type = "value"
-tracks/1/path = NodePath("Buzzer/Pivot/Button-base/Button-cap:position")
+tracks/1/path = NodePath("Pivot/Button-base/Button-cap:position")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/imported = false
@@ -68,66 +68,65 @@ tracks/1/keys = {
 "values": [ Vector2( 0, -140 ), Vector2( 0, -100 ), Vector2( 0, -140 ) ]
 }
 
-[node name="Buzzer" type="Node2D"]
+[node name="Buzzer" type="KinematicBody2D"]
+collision_mask = 2
 script = ExtResource( 5 )
 
-[node name="Buzzer" type="KinematicBody2D" parent="."]
-collision_layer = 2
-
-[node name="Physics" type="CollisionPolygon2D" parent="Buzzer"]
-polygon = PoolVector2Array( -1, 155, -182, 47, -184, -42, -122, -77, -150, -140, -79, -221, -1, -239, 102, -211, 149, -115, 124, -85, 182, -50, 182, 44 )
+[node name="Physics" type="CollisionPolygon2D" parent="."]
+polygon = PoolVector2Array( -1, 155, -182, 47, -184, -42, -122, -77, 124, -85, 182, -50, 182, 44 )
 disabled = true
 
-[node name="Base" type="Area2D" parent="Buzzer"]
+[node name="Base" type="Area2D" parent="."]
 
-[node name="Base" type="CollisionPolygon2D" parent="Buzzer/Base"]
+[node name="Base" type="CollisionPolygon2D" parent="Base"]
 polygon = PoolVector2Array( 1, 150, -180, 47, -178, -45, -1, -152, 178, -48, 181, 46 )
 
-[node name="Click" type="Area2D" parent="Buzzer"]
+[node name="Click" type="Area2D" parent="."]
+collision_layer = 3
 
-[node name="Cap" type="CollisionPolygon2D" parent="Buzzer/Click"]
+[node name="Cap" type="CollisionPolygon2D" parent="Click"]
 polygon = PoolVector2Array( 23, -42, -71, -50, -133, -86, -149, -140, -114, -202, -65, -228, 19, -240, 94, -218, 132, -174, 149, -117, 105, -66 )
 
-[node name="Stick" type="CollisionPolygon2D" parent="Buzzer/Click"]
+[node name="Stick" type="CollisionPolygon2D" parent="Click"]
 polygon = PoolVector2Array( 38, -58, -2, -50, -35, -60, -36, -130, -36, -160, -24, -174, 0, -182, 20, -175, 34, -164, 38, -147, 36, -130 )
 
-[node name="Pivot" type="Node2D" parent="Buzzer"]
+[node name="Pivot" type="Node2D" parent="."]
 
-[node name="Button-base" type="Sprite" parent="Buzzer/Pivot"]
+[node name="Button-base" type="Sprite" parent="Pivot"]
 texture = ExtResource( 4 )
 
-[node name="Button-stick" type="Sprite" parent="Buzzer/Pivot/Button-base"]
+[node name="Button-stick" type="Sprite" parent="Pivot/Button-base"]
 position = Vector2( 0, -80 )
 texture = ExtResource( 3 )
 
-[node name="Button-base-front" type="Sprite" parent="Buzzer/Pivot/Button-base"]
+[node name="Button-base-front" type="Sprite" parent="Pivot/Button-base"]
 texture = ExtResource( 2 )
 __meta__ = {
 "_edit_lock_": true
 }
 
-[node name="Led" type="Node2D" parent="Buzzer/Pivot/Button-base/Button-base-front"]
+[node name="Led" type="Node2D" parent="Pivot/Button-base/Button-base-front"]
 unique_name_in_owner = true
 position = Vector2( -133, -47 )
 __meta__ = {
 "_edit_group_": true
 }
 
-[node name="Led-on" type="Sprite" parent="Buzzer/Pivot/Button-base/Button-base-front/Led"]
+[node name="Led-on" type="Sprite" parent="Pivot/Button-base/Button-base-front/Led"]
 visible = false
 texture = ExtResource( 8 )
 
-[node name="Led-off" type="Sprite" parent="Buzzer/Pivot/Button-base/Button-base-front/Led"]
+[node name="Led-off" type="Sprite" parent="Pivot/Button-base/Button-base-front/Led"]
 texture = ExtResource( 9 )
 
-[node name="Button-cap" type="Sprite" parent="Buzzer/Pivot/Button-base"]
+[node name="Button-cap" type="Sprite" parent="Pivot/Button-base"]
 position = Vector2( 0, -140 )
 texture = ExtResource( 1 )
 
-[node name="RemoteTransform2D" type="RemoteTransform2D" parent="Buzzer/Pivot/Button-base/Button-cap"]
+[node name="RemoteTransform2D" type="RemoteTransform2D" parent="Pivot/Button-base/Button-cap"]
 remote_path = NodePath("../../../../Light")
 
-[node name="Light" type="Sprite" parent="Buzzer"]
+[node name="Light" type="Sprite" parent="."]
 unique_name_in_owner = true
 modulate = Color( 1, 1, 1, 0 )
 material = SubResource( 1 )
@@ -146,6 +145,7 @@ stream = ExtResource( 6 )
 [node name="Error" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 7 )
 
-[connection signal="input_event" from="Buzzer/Base" to="." method="_on_Base_input_event"]
-[connection signal="input_event" from="Buzzer/Click" to="." method="_on_Click_input_event"]
+[connection signal="input_event" from="Base" to="." method="_on_Base_input_event"]
+[connection signal="body_entered" from="Click" to="." method="_on_Click_body_entered"]
+[connection signal="input_event" from="Click" to="." method="_on_Click_input_event"]
 [connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_AnimationPlayer_animation_finished"]

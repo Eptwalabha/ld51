@@ -1,5 +1,5 @@
 class_name Buzzer
-extends Node2D
+extends KinematicBody2D
 
 signal pressed
 signal press_finished
@@ -10,9 +10,10 @@ signal hidden_in_the_dark
 onready var light : Sprite = $"%Light"
 onready var led : Node2D = $"%Led"
 onready var tween : Tween = $Tween
+onready var pivot : Node2D = $Pivot
 
-onready var cap : Sprite = $"Buzzer/Pivot/Button-base/Button-cap"
-onready var stick : Sprite = $"Buzzer/Pivot/Button-base/Button-stick"
+onready var cap : Sprite = $"Pivot/Button-base/Button-cap"
+onready var stick : Sprite = $"Pivot/Button-base/Button-stick"
 
 export(bool) var with_cap : bool = true
 export(bool) var with_stick : bool = true
@@ -20,10 +21,13 @@ export(bool) var light_is_on: bool = false
 export(bool) var draggable : bool = false
 export(bool) var powered : bool = true
 
+var physic_enable : bool = false
+var physics_collision : bool = false
 var pressing : bool = false
 var dragging : bool = false
 var delta_drag : Vector2 = Vector2.ZERO
 var display_led: bool = false
+var velocity : Vector2 = Vector2.ZERO
 
 func _ready() -> void:
 	update_buzzer_state()
@@ -34,8 +38,10 @@ func reset() -> void:
 	draggable = false
 	dragging = false
 	display_led = false
+	physic_enable = false
+	physics_collision = false
 	update_buzzer_state()
-	$Buzzer/Pivot.modulate = Color.white
+	pivot.modulate = Color.white
 	_turn_light(light_is_on, true)
 
 func play_sound(good: bool) -> void:
@@ -45,7 +51,7 @@ func play_sound(good: bool) -> void:
 		$Error.play()
 
 func in_the_dark() -> void:
-	tween.interpolate_property($Buzzer/Pivot, 'modulate', $Buzzer/Pivot.modulate, Color.black, 1.0)
+	tween.interpolate_property(pivot, 'modulate', pivot.modulate, Color.black, 1.0)
 	tween.start()
 	yield(get_tree().create_timer(1.5), "timeout")
 	emit_signal("hidden_in_the_dark")
@@ -67,14 +73,19 @@ func _turn_light(on: bool, instant : bool) -> void:
 
 func _physics_process(delta: float) -> void:
 	if draggable and dragging:
+		velocity = Vector2.ZERO
 		global_position = lerp(global_position, get_global_mouse_position() + delta_drag, 20 * delta)
+	elif physic_enable:
+		velocity.y += delta * 10.0
+		move_and_collide(velocity)
 
 func update_buzzer_state() -> void:
 	cap.visible = with_cap
 	stick.visible = !with_cap and with_stick
 	light.visible = with_cap
-	$Buzzer/Click/Cap.disabled = !with_cap
-	$Buzzer/Click/Stick.disabled = with_cap or !with_stick
+	$Click/Cap.disabled = !with_cap
+	$Click/Stick.disabled = with_cap or !with_stick
+	$Physics.disabled = !physic_enable
 	update_led()
 
 func update_led() -> void:
@@ -87,13 +98,16 @@ func can_press() -> bool:
 		return false
 	return with_cap or with_stick
 
+func do_press() -> void:
+	pressing = true
+	$AnimationPlayer.play("press")
+	if powered:
+		emit_signal("pressed")
+
 func _on_Click_input_event(_viewport: Node, event: InputEvent, _shape_idx: int) -> void:
 	if event is InputEventMouseButton and event.is_pressed():
 		if can_press():
-			pressing = true
-			$AnimationPlayer.play("press")
-			if powered:
-				emit_signal("pressed")
+			do_press()
 
 func _on_AnimationPlayer_animation_finished(anim_name: String) -> void:
 	if anim_name == 'press':
@@ -111,3 +125,9 @@ func _on_Base_input_event(viewport: Node, event: InputEvent, shape_idx: int) -> 
 		elif event.is_action_released('touch'):
 			emit_signal("drag_stopped")
 			dragging = false
+
+
+func _on_Click_body_entered(body: Node) -> void:
+	if physic_enable or physics_collision:
+		if body != self:
+			do_press()
