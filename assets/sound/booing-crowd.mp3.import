@@ -1,0 +1,15 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+path="res://.import/booing-crowd.mp3-2dc31b5b696ee10ba6b8fb7c9094c716.mp3str"
+
+[deps]
+
+source_file="res://assets/sound/booing-crowd.mp3"
+dest_files=[ "res://.import/booing-crowd.mp3-2dc31b5b696ee10ba6b8fb7c9094c716.mp3str" ]
+
+[params]
+
+loop=false
+loop_offset=0

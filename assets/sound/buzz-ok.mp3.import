@@ -1,0 +1,15 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+path="res://.import/buzz-ok.mp3-534cc51e9584a744ea285d1224224567.mp3str"
+
+[deps]
+
+source_file="res://assets/sound/buzz-ok.mp3"
+dest_files=[ "res://.import/buzz-ok.mp3-534cc51e9584a744ea285d1224224567.mp3str" ]
+
+[params]
+
+loop=false
+loop_offset=0

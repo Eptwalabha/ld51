@@ -1,0 +1,15 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+path="res://.import/loosing.mp3-40e136e9f5b79fcb74e2761e801330d3.mp3str"
+
+[deps]
+
+source_file="res://assets/sound/loosing.mp3"
+dest_files=[ "res://.import/loosing.mp3-40e136e9f5b79fcb74e2761e801330d3.mp3str" ]
+
+[params]
+
+loop=false
+loop_offset=0

@@ -1,0 +1,114 @@
+[gd_scene load_steps=7 format=2]
+
+[ext_resource path="res://scenes/Level.gd" type="Script" id=1]
+[ext_resource path="res://scenes/item/Button.tscn" type="PackedScene" id=2]
+[ext_resource path="res://assets/sound/booing-crowd.mp3" type="AudioStream" id=3]
+[ext_resource path="res://assets/sound/loosing.mp3" type="AudioStream" id=4]
+
+[sub_resource type="Animation" id=1]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/path = NodePath("Loose:playing")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ false ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("Booing:playing")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ false ]
+}
+
+[sub_resource type="Animation" id=2]
+resource_name = "loose"
+length = 5.0
+tracks/0/type = "value"
+tracks/0/path = NodePath("Loose:playing")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ true ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("Booing:playing")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 1 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ true ]
+}
+
+[node name="Game" type="Node2D"]
+script = ExtResource( 1 )
+duration = 5.0
+
+[node name="Button" parent="." instance=ExtResource( 2 )]
+position = Vector2( 512, 460 )
+
+[node name="Camera2D" type="Camera2D" parent="Button"]
+offset = Vector2( 0, -150 )
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="Control" type="Control" parent="CanvasLayer"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+
+[node name="Dialog" type="Label" parent="CanvasLayer/Control"]
+anchor_right = 1.0
+margin_top = 211.0
+margin_bottom = 328.0
+text = "dialog"
+align = 1
+valign = 1
+
+[node name="CountDown" type="Label" parent="CanvasLayer/Control"]
+unique_name_in_owner = true
+anchor_left = 0.5
+anchor_right = 0.5
+margin_left = -256.5
+margin_top = 41.0
+margin_right = 256.5
+margin_bottom = 158.0
+text = "dialog"
+align = 1
+valign = 1
+
+[node name="Loose" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 4 )
+
+[node name="Booing" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 3 )
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+anims/RESET = SubResource( 1 )
+anims/loose = SubResource( 2 )
+
+[node name="Center" type="Position2D" parent="."]
+position = Vector2( 512, 460 )
+
+[connection signal="clicked" from="Button" to="." method="_on_Button_clicked"]
+[connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_AnimationPlayer_animation_finished"]
