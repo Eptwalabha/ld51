@@ -26,14 +26,13 @@ export(float) var extra_time : float = 1.0
 enum LEVEL {
 	NOTHING,
 	INTRO,
-	NEED_POWER,
-	NO_CAP,
 	INTRO2,
-	MOVE1,
-	MOVE2,
+	MOVE_AROUND,
+	MOVE_AT_RANDOM,
+	NO_CAP,
+	NEED_POWER,
 	NO_COUNTER,
 	DONT_TURN_LIGHT,
-	MOVE_RANDOM,
 	LIGHT_TOO_SOON,
 	IN_THE_DARK,
 }
@@ -64,19 +63,6 @@ func update_count_down() -> void:
 		var milli : int = int(100.0 * fmod(abs(remaining), 1.0))
 		count_down.text = "%s.%s" % [second, milli]
 
-func _on_Buzzer_pressed() -> void:
-	press_count += 1
-	level_end = true
-	if !game_started:
-		sticky.fall()
-		buzzer.play_sound(true)
-	else:
-		if remaining <= 0 and (abs(remaining) <= extra_time):
-			buzzer.play_sound(true)
-		else:
-			buzzer.play_sound(false)
-			game_over()
-
 func start_game() -> void:
 	eptwalabha.visible = false
 	game_started = true
@@ -94,6 +80,7 @@ func move_buzzer_at_random() -> void:
 
 func next_level() -> void:
 	buzzer.reset()
+	buzzer.rotation = 0
 	var new_buzzer_position: = Vector2(400, 600)
 	buzzer.turn_light(false)
 	count_down.visible = true
@@ -104,6 +91,7 @@ func next_level() -> void:
 		LEVEL.LIGHT_TOO_SOON:
 			$Timer.start(2.0)
 		LEVEL.NEED_POWER:
+			buzzer.display_led = true
 			powerArea.visible = true
 			buzzer.draggable = true
 			buzzer.powered = false
@@ -111,14 +99,30 @@ func next_level() -> void:
 			count_down.visible = false
 		LEVEL.NO_CAP:
 			buzzer.with_cap = false
-			buzzer.update_buzzer_state()
 	buzzer.global_position = new_buzzer_position
+	buzzer.update_buzzer_state()
 	level_end = false
 	remaining = duration
 
 func game_over() -> void:
 	game_over = true
 	$AnimationPlayer.play("loose")
+
+
+# CALLBACKS
+
+func _on_Buzzer_pressed() -> void:
+	press_count += 1
+	level_end = true
+	if !game_started:
+		sticky.fall()
+		buzzer.play_sound(true)
+	else:
+		if remaining <= 0 and (abs(remaining) <= extra_time):
+			buzzer.play_sound(true)
+		else:
+			buzzer.play_sound(false)
+			game_over()
 
 func _on_AnimationPlayer_animation_finished(anim_name: String) -> void:
 	var _osef = get_tree().change_scene("res://scenes/Game.tscn")
@@ -134,9 +138,11 @@ func _on_Buzzer_drag_started() -> void:
 
 func _on_PowerArea_entered() -> void:
 	buzzer.powered = true
+	buzzer.update_led()
 
 func _on_PowerArea_exited() -> void:
 	buzzer.powered = false
+	buzzer.update_led()
 
 func _on_Timer_timeout() -> void:
 	match press_count:

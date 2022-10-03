@@ -219,6 +219,7 @@ shape = SubResource( 3 )
 [node name="Timer" type="Timer" parent="."]
 
 [connection signal="entered" from="BG/PowerArea" to="." method="_on_PowerArea_entered"]
+[connection signal="exited" from="BG/PowerArea" to="." method="_on_PowerArea_exited"]
 [connection signal="drag_started" from="Buzzer" to="." method="_on_Buzzer_drag_started"]
 [connection signal="drag_stopped" from="Buzzer" to="." method="_on_Buzzer_drag_stopped"]
 [connection signal="hidden_in_the_dark" from="Buzzer" to="." method="_on_Buzzer_hidden_in_the_dark"]

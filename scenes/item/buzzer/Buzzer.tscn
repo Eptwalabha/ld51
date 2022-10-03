@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=2]
+[gd_scene load_steps=13 format=2]
 
 [ext_resource path="res://assets/img/button-cap.png" type="Texture" id=1]
 [ext_resource path="res://assets/img/button-base-front.png" type="Texture" id=2]
@@ -7,6 +7,8 @@
 [ext_resource path="res://scenes/item/buzzer/Buzzer.gd" type="Script" id=5]
 [ext_resource path="res://assets/sound/buzz-ok.mp3" type="AudioStream" id=6]
 [ext_resource path="res://assets/sound/buzz-error.mp3" type="AudioStream" id=7]
+[ext_resource path="res://assets/img/led-on.png" type="Texture" id=8]
+[ext_resource path="res://assets/img/led-off.png" type="Texture" id=9]
 
 [sub_resource type="CanvasItemMaterial" id=1]
 blend_mode = 1
@@ -103,6 +105,20 @@ texture = ExtResource( 2 )
 __meta__ = {
 "_edit_lock_": true
 }
+
+[node name="Led" type="Node2D" parent="Buzzer/Pivot/Button-base/Button-base-front"]
+unique_name_in_owner = true
+position = Vector2( -133, -47 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="Led-on" type="Sprite" parent="Buzzer/Pivot/Button-base/Button-base-front/Led"]
+visible = false
+texture = ExtResource( 8 )
+
+[node name="Led-off" type="Sprite" parent="Buzzer/Pivot/Button-base/Button-base-front/Led"]
+texture = ExtResource( 9 )
 
 [node name="Button-cap" type="Sprite" parent="Buzzer/Pivot/Button-base"]
 position = Vector2( 0, -140 )

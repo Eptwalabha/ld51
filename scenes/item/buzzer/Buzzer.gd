@@ -8,6 +8,7 @@ signal drag_stopped
 signal hidden_in_the_dark
 
 onready var light : Sprite = $"%Light"
+onready var led : Node2D = $"%Led"
 onready var tween : Tween = $Tween
 
 onready var cap : Sprite = $"Buzzer/Pivot/Button-base/Button-cap"
@@ -22,6 +23,7 @@ export(bool) var powered : bool = true
 var pressing : bool = false
 var dragging : bool = false
 var delta_drag : Vector2 = Vector2.ZERO
+var display_led: bool = false
 
 func _ready() -> void:
 	update_buzzer_state()
@@ -31,6 +33,7 @@ func reset() -> void:
 	with_stick = true
 	draggable = false
 	dragging = false
+	display_led = false
 	update_buzzer_state()
 	$Buzzer/Pivot.modulate = Color.white
 	_turn_light(light_is_on, true)
@@ -72,6 +75,12 @@ func update_buzzer_state() -> void:
 	light.visible = with_cap
 	$Buzzer/Click/Cap.disabled = !with_cap
 	$Buzzer/Click/Stick.disabled = with_cap or !with_stick
+	update_led()
+
+func update_led() -> void:
+	led.visible = display_led
+	led.get_node("Led-on").visible = powered
+	led.get_node("Led-off").visible = !powered
 
 func can_press() -> bool:
 	if pressing:

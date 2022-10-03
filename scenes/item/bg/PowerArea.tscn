@@ -28,3 +28,4 @@ offset = Vector2( -200, 64 )
 polygon = PoolVector2Array( 206.336, -79.7752, 205.701, -47.8911, 214.888, -55.6119, 210.58, -14.1095, 206.377, -39.3154, 199.61, -34.9337, 194.763, -60.9051, 190.048, -55.6358, 183.671, -80.3204 )
 
 [connection signal="area_entered" from="Area2D" to="." method="_on_Area2D_area_entered"]
+[connection signal="area_exited" from="Area2D" to="." method="_on_Area2D_area_exited"]
