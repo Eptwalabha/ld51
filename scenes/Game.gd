@@ -83,3 +83,9 @@ func _on_AnimationPlayer_animation_finished(anim_name: String) -> void:
 func _on_Fade_finished(_fade_in: bool) -> void:
 	pass
 
+
+func _on_Buzzer_drag_stopped() -> void:
+	print("poc!")
+
+func _on_Buzzer_drag_started() -> void:
+	pass

@@ -92,12 +92,10 @@ current = true
 unique_name_in_owner = true
 position = Vector2( 400, 585 )
 scale = Vector2( 0.5, 0.5 )
-with_cap = false
 
-[node name="Sticky" parent="Buzzer" instance=ExtResource( 6 )]
+[node name="Sticky" parent="." instance=ExtResource( 6 )]
 unique_name_in_owner = true
-position = Vector2( -100, -136 )
-scale = Vector2( 2, 2 )
+position = Vector2( 350, 517 )
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
@@ -203,6 +201,8 @@ position = Vector2( 800, 400 )
 rotation = 1.57079
 shape = SubResource( 3 )
 
+[connection signal="drag_started" from="Buzzer" to="." method="_on_Buzzer_drag_started"]
+[connection signal="drag_stopped" from="Buzzer" to="." method="_on_Buzzer_drag_stopped"]
 [connection signal="pressed" from="Buzzer" to="." method="_on_Buzzer_pressed"]
 [connection signal="finished" from="CanvasLayer/Control/Fade" to="." method="_on_Fade_finished"]
 [connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_AnimationPlayer_animation_finished"]
