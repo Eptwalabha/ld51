@@ -89,7 +89,6 @@ extents = Vector2( 450, 20 )
 [node name="Game" type="Node2D"]
 script = ExtResource( 1 )
 shrink_curve = SubResource( 4 )
-duration = 4.0
 
 [node name="ColorRect" type="ColorRect" parent="."]
 margin_left = -38.0
@@ -228,8 +227,6 @@ rotation = 1.57079
 shape = SubResource( 3 )
 
 [node name="Timer" type="Timer" parent="."]
-
-[node name="Random" type="Timer" parent="."]
 one_shot = true
 
 [connection signal="entered" from="BG/PowerArea" to="." method="_on_PowerArea_entered"]
@@ -243,4 +240,3 @@ one_shot = true
 [connection signal="finished" from="CanvasLayer/Control/Fade" to="." method="_on_Fade_finished"]
 [connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_AnimationPlayer_animation_finished"]
 [connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]
-[connection signal="timeout" from="Random" to="." method="_on_Random_timeout"]

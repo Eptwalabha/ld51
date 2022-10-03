@@ -16,6 +16,7 @@ onready var sticky : StickyNote = $"%Sticky"
 onready var fade : Fade = $"%Fade"
 onready var eptwalabha : Label = $"%Eptwalabha"
 onready var powerArea : PowerArea = $BG/PowerArea
+onready var timer : Timer = $Timer
 
 export(Curve) var shrink_curve
 export(float) var duration : float = 10.0
@@ -24,9 +25,9 @@ export(float) var extra_time : float = 1.0
 enum LEVEL {
 	NOTHING,
 	INTRO,
-	TP_RANDOM,
-	FALLING_OBJECT,
+#	FALLING_OBJECT,
 
+	TP_RANDOM,
 	INTRO2,
 	RANDOM_SHRINK_BOUNCE,
 	RANDOM_BOUNCE,
@@ -94,7 +95,7 @@ func bounce_buzzer(delta: float) -> void:
 	buzzer.global_position = next_position
 
 func start_random_timer() -> void:
-	$Random.start(randf() * 1.5 + .5)
+	timer.start(randf() * 1.5 + .5)
 
 func update_count_down() -> void:
 	if remaining <= 0.0 or game_over:
@@ -144,7 +145,7 @@ func next_level() -> void:
 		LEVEL.IN_THE_DARK:
 			buzzer.in_the_dark()
 		LEVEL.LIGHT_TOO_SOON:
-			$Timer.start(2.0)
+			timer.start(duration - 1.0)
 		LEVEL.NEED_POWER:
 			new_buzzer_position = Vector2(150, 650)
 			buzzer.display_led = true
@@ -250,6 +251,13 @@ func _on_Timer_timeout() -> void:
 	match press_count:
 		LEVEL.LIGHT_TOO_SOON:
 			buzzer.turn_light(true)
+		LEVEL.RANDOM_BOUNCE, LEVEL.RANDOM_SHRINK_BOUNCE:
+			bouncing_direction = random_direction()
+			start_random_timer()
+		LEVEL.TP_RANDOM:
+			buzzer.global_position = random_position()
+			if remaining >= 1.0:
+				start_random_timer()
 
 func _on_Buzzer_hidden_in_the_dark() -> void:
 	match press_count:
@@ -267,13 +275,3 @@ func _on_Buzzer_press_finished() -> void:
 			fade.fade_out()
 		_:
 			next_level()
-
-func _on_Random_timeout() -> void:
-	match press_count:
-		LEVEL.RANDOM_BOUNCE, LEVEL.RANDOM_SHRINK_BOUNCE:
-			bouncing_direction = random_direction()
-			start_random_timer()
-		LEVEL.TP_RANDOM:
-			buzzer.global_position = random_position()
-			if remaining >= 1.0:
-				start_random_timer()
