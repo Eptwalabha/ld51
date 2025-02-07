@@ -9,19 +9,19 @@ var b_scale: Vector2 = Vector2(.5, .5)
 var bouncing_direction: Vector2 = Vector2.UP
 var moving_speed : float = 200.0
 
-onready var count_down : Label = $"%CountDown"
-onready var dialog : Label = $"%Dialog"
-onready var buzzer : Buzzer = $"%Buzzer"
-onready var sticky : StickyNote = $"%Sticky"
-onready var fade : Fade = $"%Fade"
-onready var eptwalabha : Label = $"%Eptwalabha"
-onready var powerArea : PowerArea = $BG/PowerArea
-onready var timer : Timer = $Timer
-onready var mute : CheckBox = $"%Mute"
+@onready var count_down : Label = $"%CountDown"
+@onready var dialog : Label = $"%Dialog"
+@onready var buzzer : Buzzer = $"%Buzzer"
+@onready var sticky : StickyNote = $"%Sticky"
+@onready var fade : Fade = $"%Fade"
+@onready var eptwalabha : Label = $"%Eptwalabha"
+@onready var powerArea : PowerArea = $BG/PowerArea
+@onready var timer : Timer = $Timer
+@onready var mute : CheckBox = $"%Mute"
 
-export(Curve) var shrink_curve
-export(float) var duration : float = 10.0
-export(float) var extra_time : float = 1.0
+@export var shrink_curve: Curve
+@export var duration: float = 10.0
+@export var extra_time: float = 1.0
 
 enum LEVEL {
 	NOTHING,
@@ -55,7 +55,7 @@ enum LEVEL {
 
 func _ready() -> void:
 	AudioServer.set_bus_mute(0, Stats.mute)
-	mute.pressed = Stats.mute
+	mute.button_pressed = Stats.mute
 	randomize()
 	count_down.hide()
 	buzzer.turn_light(true, true)
@@ -90,7 +90,7 @@ func update_buzzer(delta: float) -> void:
 
 func update_buzzer_scale() -> void:
 	var x = min(1.0, (duration - remaining) / duration)
-	buzzer.scale = b_scale * shrink_curve.interpolate(x)
+	buzzer.scale = b_scale * shrink_curve.sample(x)
 
 func bounce_buzzer(delta: float) -> void:
 	var next_position : Vector2 = buzzer.global_position + bouncing_direction * delta * moving_speed
@@ -297,7 +297,7 @@ func _on_AnimationPlayer_animation_finished(_anim_name: String) -> void:
 
 func _on_Fade_finished(fade_in: bool) -> void:
 	if !fade_in and press_count == LEVEL.VICTORY:
-		var _osef = get_tree().change_scene("res://scenes/Victory.tscn")
+		var _osef = get_tree().change_scene_to_file("res://scenes/Victory.tscn")
 
 func _on_Buzzer_drag_stopped() -> void:
 	pass
@@ -348,5 +348,5 @@ func _on_Buzzer_press_finished() -> void:
 
 
 func _on_CheckBox_pressed() -> void:
-	AudioServer.set_bus_mute(0, mute.pressed)
-	Stats.mute = mute.pressed
+	AudioServer.set_bus_mute(0, mute.button_pressed)
+	Stats.mute = mute.button_pressed

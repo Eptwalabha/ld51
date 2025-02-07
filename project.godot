@@ -6,52 +6,13 @@
 ;   [section] ; section goes between []
 ;   param=value ; assign values to parameters
 
-config_version=4
-
-_global_script_classes=[ {
-"base": "KinematicBody2D",
-"class": "Buzzer",
-"language": "GDScript",
-"path": "res://scenes/item/buzzer/Buzzer.gd"
-}, {
-"base": "Control",
-"class": "Fade",
-"language": "GDScript",
-"path": "res://scenes/ui/Fade.gd"
-}, {
-"base": "Node2D",
-"class": "FakeBuzzers",
-"language": "GDScript",
-"path": "res://scenes/item/fake/FakeBuzzers.gd"
-}, {
-"base": "StaticBody2D",
-"class": "Maze",
-"language": "GDScript",
-"path": "res://scenes/item/bg/Maze.gd"
-}, {
-"base": "Node2D",
-"class": "PowerArea",
-"language": "GDScript",
-"path": "res://scenes/item/bg/PowerArea.gd"
-}, {
-"base": "Node2D",
-"class": "StickyNote",
-"language": "GDScript",
-"path": "res://scenes/item/sticky/StickyNote.gd"
-} ]
-_global_script_class_icons={
-"Buzzer": "",
-"Fade": "",
-"FakeBuzzers": "",
-"Maze": "",
-"PowerArea": "",
-"StickyNote": ""
-}
+config_version=5
 
 [application]
 
 config/name="ld51b"
 run/main_scene="res://scenes/Game.tscn"
+config/features=PackedStringArray("4.4")
 config/icon="res://icon.png"
 
 [autoload]
@@ -60,16 +21,15 @@ Stats="*res://script/stats.gd"
 
 [display]
 
-window/size/width=800
-window/size/height=800
+window/size/viewport_width=800
+window/size/viewport_height=800
 window/stretch/mode="viewport"
-window/stretch/aspect="keep"
 
 [gui]
 
-common/drop_mouse_on_gui_input_disabled=true
 theme/custom="res://assets/game-theme.tres"
 theme/custom_font="res://assets/fonts/font_mono.tres"
+common/drop_mouse_on_gui_input_disabled=true
 
 [importer_defaults]
 
@@ -82,14 +42,18 @@ mp3={
 
 touch={
 "deadzone": 0.5,
-"events": [ Object(InputEventMouseButton,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"button_mask":0,"position":Vector2( 0, 0 ),"global_position":Vector2( 0, 0 ),"factor":1.0,"button_index":1,"pressed":false,"doubleclick":false,"script":null)
- ]
+"events": [Object(InputEventMouseButton,"resource_local_to_scene":false,"resource_name":"","device":0,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"button_mask":0,"position":Vector2(0, 0),"global_position":Vector2(0, 0),"factor":1.0,"button_index":1,"canceled":false,"pressed":false,"double_click":false,"script":null)
+]
 }
+
+[internationalization]
+
+locale/translations=PackedStringArray("res://assets/trad/traduction.en.translation")
 
 [locale]
 
-translations=PoolStringArray( "res://assets/trad/traduction.en.translation" )
-locale_filter=[ 0, [ "en" ] ]
+translations=PackedStringArray("res://assets/trad/traduction.en.translation")
+locale_filter=[0, ["en"]]
 
 [physics]
 
@@ -97,4 +61,4 @@ common/enable_pause_aware_picking=true
 
 [rendering]
 
-environment/default_environment="res://default_env.tres"
+environment/defaults/default_environment="res://default_env.tres"

@@ -1,262 +1,257 @@
-[gd_scene load_steps=16 format=2]
+[gd_scene load_steps=17 format=3 uid="uid://cts14atr0ew0"]
 
-[ext_resource path="res://scenes/Game.gd" type="Script" id=1]
-[ext_resource path="res://scenes/item/bg/PowerArea.tscn" type="PackedScene" id=2]
-[ext_resource path="res://assets/sound/booing-crowd.mp3" type="AudioStream" id=3]
-[ext_resource path="res://assets/sound/loosing.mp3" type="AudioStream" id=4]
-[ext_resource path="res://scenes/ui/Fade.tscn" type="PackedScene" id=5]
-[ext_resource path="res://scenes/item/sticky/StickyNote.tscn" type="PackedScene" id=6]
-[ext_resource path="res://assets/fonts/font_counter.tres" type="DynamicFont" id=7]
-[ext_resource path="res://scenes/item/buzzer/Buzzer.tscn" type="PackedScene" id=8]
-[ext_resource path="res://scenes/item/bg/Maze.tscn" type="PackedScene" id=9]
-[ext_resource path="res://scenes/item/fake/FakeBuzzers.tscn" type="PackedScene" id=10]
-[ext_resource path="res://assets/fonts/font_mono_bold.tres" type="DynamicFont" id=11]
+[ext_resource type="Script" uid="uid://72wnnrwi3yhf" path="res://scenes/Game.gd" id="1"]
+[ext_resource type="PackedScene" uid="uid://bw85vpo4wndfv" path="res://scenes/item/bg/PowerArea.tscn" id="2"]
+[ext_resource type="AudioStream" uid="uid://dgy3sre4cs3dd" path="res://assets/sound/booing-crowd.mp3" id="3"]
+[ext_resource type="AudioStream" uid="uid://d33evqep5ased" path="res://assets/sound/loosing.mp3" id="4"]
+[ext_resource type="PackedScene" uid="uid://bgrvi2jpd0d8t" path="res://scenes/ui/Fade.tscn" id="5"]
+[ext_resource type="PackedScene" path="res://scenes/item/sticky/StickyNote.tscn" id="6"]
+[ext_resource type="FontFile" path="res://assets/fonts/font_counter.tres" id="7"]
+[ext_resource type="PackedScene" uid="uid://boh45t802s31y" path="res://scenes/item/buzzer/Buzzer.tscn" id="8"]
+[ext_resource type="PackedScene" path="res://scenes/item/bg/Maze.tscn" id="9"]
+[ext_resource type="PackedScene" path="res://scenes/item/fake/FakeBuzzers.tscn" id="10"]
+[ext_resource type="FontFile" path="res://assets/fonts/font_mono_bold.tres" id="11"]
 
-[sub_resource type="Curve" id=4]
-_data = [ Vector2( 0, 1 ), 0.0, -0.0852752, 0, 0, Vector2( 1, 0.454545 ), -1.68182, 0.0, 0, 0 ]
+[sub_resource type="Curve" id="4"]
+_data = [Vector2(0, 1), 0.0, -0.0852752, 0, 0, Vector2(1, 0.454545), -1.68182, 0.0, 0, 0]
+point_count = 2
 
-[sub_resource type="Animation" id=1]
+[sub_resource type="Animation" id="1"]
 length = 0.001
 tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
 tracks/0/path = NodePath("Loose:playing")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
-tracks/0/imported = false
-tracks/0/enabled = true
 tracks/0/keys = {
-"times": PoolRealArray( 0 ),
-"transitions": PoolRealArray( 1 ),
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [ false ]
+"values": [false]
 }
 tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
 tracks/1/path = NodePath("Booing:playing")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
-tracks/1/imported = false
-tracks/1/enabled = true
 tracks/1/keys = {
-"times": PoolRealArray( 0 ),
-"transitions": PoolRealArray( 1 ),
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [ false ]
+"values": [false]
 }
 
-[sub_resource type="Animation" id=2]
+[sub_resource type="Animation" id="2"]
 resource_name = "loose"
 length = 6.0
 tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
 tracks/0/path = NodePath("Loose:playing")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
-tracks/0/imported = false
-tracks/0/enabled = true
 tracks/0/keys = {
-"times": PoolRealArray( 1 ),
-"transitions": PoolRealArray( 1 ),
+"times": PackedFloat32Array(1),
+"transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [ true ]
+"values": [true]
 }
 tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
 tracks/1/path = NodePath("Booing:playing")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
-tracks/1/imported = false
-tracks/1/enabled = true
 tracks/1/keys = {
-"times": PoolRealArray( 2 ),
-"transitions": PoolRealArray( 1 ),
+"times": PackedFloat32Array(2),
+"transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [ true ]
+"values": [true]
 }
 tracks/2/type = "method"
+tracks/2/imported = false
+tracks/2/enabled = true
 tracks/2/path = NodePath("CanvasLayer/Control/Fade")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
-tracks/2/imported = false
-tracks/2/enabled = true
 tracks/2/keys = {
-"times": PoolRealArray( 4.6 ),
-"transitions": PoolRealArray( 1 ),
-"values": [ {
-"args": [ false ],
-"method": "fade_out"
-} ]
+"times": PackedFloat32Array(4.6),
+"transitions": PackedFloat32Array(1),
+"values": [{
+"args": [false],
+"method": &"fade_out"
+}]
 }
 
-[sub_resource type="RectangleShape2D" id=3]
-extents = Vector2( 450, 20 )
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_3xj3m"]
+_data = {
+&"RESET": SubResource("1"),
+&"loose": SubResource("2")
+}
+
+[sub_resource type="RectangleShape2D" id="3"]
+size = Vector2(900, 40)
 
 [node name="Game" type="Node2D"]
-script = ExtResource( 1 )
-shrink_curve = SubResource( 4 )
+script = ExtResource("1")
+shrink_curve = SubResource("4")
 
 [node name="ColorRect" type="ColorRect" parent="."]
-margin_left = -38.0
-margin_top = -44.0
-margin_right = 852.0
-margin_bottom = 846.0
+offset_left = -38.0
+offset_top = -44.0
+offset_right = 852.0
+offset_bottom = 846.0
 mouse_filter = 2
-color = Color( 0, 0, 0, 1 )
+color = Color(0, 0, 0, 1)
 
 [node name="BG" type="Node2D" parent="."]
 
-[node name="PowerArea" parent="BG" instance=ExtResource( 2 )]
+[node name="PowerArea" parent="BG" instance=ExtResource("2")]
 visible = false
-position = Vector2( 600, 650 )
+position = Vector2(600, 650)
 
-[node name="Maze" parent="BG" instance=ExtResource( 9 )]
+[node name="Maze" parent="BG" instance=ExtResource("9")]
 visible = false
 
-[node name="FakeBuzzers" parent="BG" instance=ExtResource( 10 )]
+[node name="FakeBuzzers" parent="BG" instance=ExtResource("10")]
 
 [node name="Camera2D" type="Camera2D" parent="."]
 anchor_mode = 0
-current = true
 
-[node name="Buzzer" parent="." instance=ExtResource( 8 )]
+[node name="Buzzer" parent="." instance=ExtResource("8")]
 unique_name_in_owner = true
-position = Vector2( 400, 600 )
-scale = Vector2( 0.5, 0.5 )
+position = Vector2(400, 600)
+scale = Vector2(0.5, 0.5)
 
-[node name="Sticky" parent="." instance=ExtResource( 6 )]
+[node name="Sticky" parent="." instance=ExtResource("6")]
 unique_name_in_owner = true
-position = Vector2( 350, 530 )
+position = Vector2(350, 530)
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
 [node name="Control" type="Control" parent="CanvasLayer"]
+layout_mode = 3
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_filter = 2
-__meta__ = {
-"_edit_group_": true,
-"_edit_lock_": true
-}
 
 [node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/Control"]
+layout_mode = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
 mouse_filter = 2
-custom_constants/margin_right = 10
-custom_constants/margin_top = 10
-custom_constants/margin_left = 10
-custom_constants/margin_bottom = 10
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/Control/MarginContainer"]
-margin_left = 10.0
-margin_top = 10.0
-margin_right = 790.0
-margin_bottom = 790.0
+layout_mode = 2
 mouse_filter = 2
 
 [node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/Control/MarginContainer/VBoxContainer"]
-margin_right = 780.0
-margin_bottom = 221.0
-mouse_filter = 2
+layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 size_flags_stretch_ratio = 0.4
-custom_constants/margin_top = 40
+mouse_filter = 2
+theme_override_constants/margin_top = 40
 
 [node name="CountDown" type="Label" parent="CanvasLayer/Control/MarginContainer/VBoxContainer/MarginContainer"]
 unique_name_in_owner = true
-margin_top = 40.0
-margin_right = 780.0
-margin_bottom = 72.0
+layout_mode = 2
 size_flags_vertical = 2
 size_flags_stretch_ratio = 0.4
-custom_fonts/font = ExtResource( 7 )
+theme_override_fonts/font = ExtResource("7")
 text = "count-down"
-align = 1
+horizontal_alignment = 1
 
 [node name="MarginContainer2" type="MarginContainer" parent="CanvasLayer/Control/MarginContainer/VBoxContainer"]
-margin_top = 225.0
-margin_right = 780.0
-margin_bottom = 780.0
-mouse_filter = 2
+layout_mode = 2
 size_flags_vertical = 3
-custom_constants/margin_bottom = 40
+mouse_filter = 2
+theme_override_constants/margin_bottom = 40
 
 [node name="Dialog" type="Label" parent="CanvasLayer/Control/MarginContainer/VBoxContainer/MarginContainer2"]
 unique_name_in_owner = true
-margin_right = 780.0
-margin_bottom = 515.0
+layout_mode = 2
 size_flags_vertical = 11
-custom_constants/line_spacing = 8
-custom_fonts/font = ExtResource( 11 )
-align = 1
+theme_override_constants/line_spacing = 8
+theme_override_fonts/font = ExtResource("11")
+horizontal_alignment = 1
 
 [node name="Eptwalabha" type="Label" parent="CanvasLayer/Control/MarginContainer/VBoxContainer/MarginContainer2"]
 unique_name_in_owner = true
-margin_top = 500.0
-margin_right = 780.0
-margin_bottom = 515.0
+layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 10
 size_flags_stretch_ratio = 0.2
 text = "ld51 @eptwalabha"
-align = 1
-valign = 1
+horizontal_alignment = 1
+vertical_alignment = 1
 
-[node name="Fade" parent="CanvasLayer/Control" instance=ExtResource( 5 )]
+[node name="Fade" parent="CanvasLayer/Control" instance=ExtResource("5")]
 unique_name_in_owner = true
-duration = 1.0
+layout_mode = 1
+grow_horizontal = 2
+grow_vertical = 2
 
 [node name="MarginContainer2" type="MarginContainer" parent="CanvasLayer/Control"]
-margin_right = 125.0
-margin_bottom = 44.0
+layout_mode = 0
+offset_right = 125.0
+offset_bottom = 44.0
 mouse_filter = 2
-custom_constants/margin_right = 10
-custom_constants/margin_top = 10
-custom_constants/margin_left = 10
-custom_constants/margin_bottom = 10
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
 
 [node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/Control/MarginContainer2"]
-margin_left = 10.0
-margin_top = 10.0
-margin_right = 115.0
-margin_bottom = 34.0
+layout_mode = 2
 mouse_filter = 2
 
 [node name="Mute" type="CheckBox" parent="CanvasLayer/Control/MarginContainer2/HBoxContainer"]
 unique_name_in_owner = true
-margin_right = 72.0
-margin_bottom = 24.0
+layout_mode = 2
 shortcut_in_tooltip = false
-pressed = true
 text = "mute"
 flat = true
 
 [node name="Loose" type="AudioStreamPlayer" parent="."]
-stream = ExtResource( 4 )
+stream = ExtResource("4")
 
 [node name="Booing" type="AudioStreamPlayer" parent="."]
-stream = ExtResource( 3 )
+stream = ExtResource("3")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-anims/RESET = SubResource( 1 )
-anims/loose = SubResource( 2 )
+libraries = {
+&"": SubResource("AnimationLibrary_3xj3m")
+}
 
 [node name="StaticBody2D" type="StaticBody2D" parent="."]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
-position = Vector2( 400, 0 )
-shape = SubResource( 3 )
+position = Vector2(400, 0)
+shape = SubResource("3")
 
 [node name="CollisionShape2D2" type="CollisionShape2D" parent="StaticBody2D"]
-position = Vector2( 400, 800 )
-shape = SubResource( 3 )
+position = Vector2(400, 800)
+shape = SubResource("3")
 
 [node name="CollisionShape2D3" type="CollisionShape2D" parent="StaticBody2D"]
-position = Vector2( 0, 400 )
+position = Vector2(0, 400)
 rotation = 1.57079
-shape = SubResource( 3 )
+shape = SubResource("3")
 
 [node name="CollisionShape2D4" type="CollisionShape2D" parent="StaticBody2D"]
-position = Vector2( 800, 400 )
+position = Vector2(800, 400)
 rotation = 1.57079
-shape = SubResource( 3 )
+shape = SubResource("3")
 
 [node name="Timer" type="Timer" parent="."]
 one_shot = true

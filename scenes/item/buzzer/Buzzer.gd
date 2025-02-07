@@ -1,5 +1,5 @@
 class_name Buzzer
-extends KinematicBody2D
+extends CharacterBody2D
 
 signal pressed
 signal press_finished
@@ -7,19 +7,18 @@ signal drag_started
 signal drag_stopped
 signal hidden_in_the_dark
 
-onready var light : Sprite = $"%Light"
-onready var led : Node2D = $"%Led"
-onready var tween : Tween = $Tween
-onready var pivot : Node2D = $Pivot
+@onready var light : Sprite2D = $"%Light3D"
+@onready var led : Node2D = $"%Led"
+@onready var pivot : Node2D = $Pivot
 
-onready var cap : Sprite = $"Pivot/Button-base/Button-cap"
-onready var stick : Sprite = $"Pivot/Button-base/Button-stick"
+@onready var cap : Sprite2D = $"Pivot/Button-base/Button-cap"
+@onready var stick : Sprite2D = $"Pivot/Button-base/Button-stick"
 
-export(bool) var with_cap : bool = true
-export(bool) var with_stick : bool = true
-export(bool) var light_is_on: bool = false
-export(bool) var draggable : bool = false
-export(bool) var powered : bool = true
+@export var with_cap: bool = true
+@export var with_stick: bool = true
+@export var light_is_on: bool = false
+@export var draggable: bool = false
+@export var powered: bool = true
 
 var physic_enable : bool = false
 var physics_collision : bool = false
@@ -27,7 +26,7 @@ var pressing : bool = false
 var dragging : bool = false
 var delta_drag : Vector2 = Vector2.ZERO
 var display_led: bool = false
-var velocity : Vector2 = Vector2.ZERO
+var buzz_velocity : Vector2 = Vector2.ZERO
 
 func _ready() -> void:
 	update_buzzer_state()
@@ -41,7 +40,7 @@ func reset() -> void:
 	physic_enable = false
 	physics_collision = false
 	update_buzzer_state()
-	pivot.modulate = Color.white
+	pivot.modulate = Color.WHITE
 	_turn_light(light_is_on, true)
 
 func play_sound(good: bool) -> void:
@@ -51,9 +50,9 @@ func play_sound(good: bool) -> void:
 		$Error.play()
 
 func in_the_dark() -> void:
-	tween.interpolate_property(pivot, 'modulate', pivot.modulate, Color.black, 1.0)
-	tween.start()
-	yield(get_tree().create_timer(1.5), "timeout")
+	var tween : Tween = get_tree().create_tween()
+	tween.tween_property(pivot, 'modulate', Color.BLACK, 1.0)
+	await get_tree().create_timer(1.5).timeout
 	emit_signal("hidden_in_the_dark")
 
 func turn_light(on: bool = true, instant = false) -> void:
@@ -64,24 +63,24 @@ func turn_light(on: bool = true, instant = false) -> void:
 func _turn_light(on: bool, instant : bool) -> void:
 	light_is_on = on
 	var to : float = 1.0 if light_is_on else 0.0
-	tween.stop_all()
 	if instant or !on:
 		light.modulate.a = to
 	else:
-		tween.interpolate_property(light, "modulate:a", light.modulate.a, to, .15)
-		tween.start()
+		var tween : Tween = get_tree().create_tween()
+		tween.tween_property(light, "modulate:a", to, .15)
 
 func _physics_process(delta: float) -> void:
 	if draggable and dragging:
-		velocity = Vector2.ZERO
+		buzz_velocity = Vector2.ZERO
 		if physics_collision:
 			var diff = (get_global_mouse_position() - global_position) * (1.0 / scale.x)
-			move_and_slide(diff)
+			set_velocity(diff)
+			move_and_slide()
 		else:
 			global_position = lerp(global_position, get_global_mouse_position() + delta_drag, 50 * delta)
 	elif physic_enable:
-		velocity.y += delta * 8.0
-		move_and_collide(velocity)
+		buzz_velocity.y += delta * 8.0
+		move_and_collide(buzz_velocity)
 
 func update_buzzer_state() -> void:
 	cap.visible = with_cap
@@ -137,4 +136,3 @@ func _on_Click_body_entered(body: Node) -> void:
 	if physic_enable or physics_collision:
 		if body != self:
 			do_press()
-

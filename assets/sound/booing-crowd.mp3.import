@@ -2,14 +2,18 @@
 
 importer="mp3"
 type="AudioStreamMP3"
-path="res://.import/booing-crowd.mp3-2dc31b5b696ee10ba6b8fb7c9094c716.mp3str"
+uid="uid://dgy3sre4cs3dd"
+path="res://.godot/imported/booing-crowd.mp3-2dc31b5b696ee10ba6b8fb7c9094c716.mp3str"
 
 [deps]
 
 source_file="res://assets/sound/booing-crowd.mp3"
-dest_files=[ "res://.import/booing-crowd.mp3-2dc31b5b696ee10ba6b8fb7c9094c716.mp3str" ]
+dest_files=["res://.godot/imported/booing-crowd.mp3-2dc31b5b696ee10ba6b8fb7c9094c716.mp3str"]
 
 [params]
 
 loop=false
 loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

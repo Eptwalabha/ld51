@@ -15,7 +15,7 @@ func spawn(n: int) -> void:
 		f.hide()
 
 	for i in range(n):
-		var s = Sprite.new()
+		var s = Sprite2D.new()
 		s.texture = texture
 		s.scale = Vector2(.5, .5)
 		s.global_position = Vector2(100, 150) + Vector2(600 * randf(), 550 * randf())

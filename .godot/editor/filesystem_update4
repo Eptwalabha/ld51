@@ -1,0 +1,10 @@
+res://assets/trad/traduction.en.translation
+res://default_env.tres
+res://scenes/Game.tscn
+res://scenes/Game.gd
+res://scenes/item/buzzer/Buzzer.tscn
+res://scenes/item/buzzer/Buzzer.gd
+res://scenes/ui/Fade.tscn
+res://scenes/ui/Fade.gd
+res://scenes/item/bg/PowerArea.tscn
+res://script/stats.gd

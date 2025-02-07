@@ -12,7 +12,7 @@ func _ready() -> void:
 		'time': str(int(Stats.total_time))
 	}
 	$Buzzer.turn_light()
-	$CanvasLayer/Control/VBoxContainer/RichTextLabel.bbcode_text = text.format(data)
+	$CanvasLayer/Control/VBoxContainer/RichTextLabel.text = text.format(data)
 
 func _on_Buzzer_press_finished() -> void:
 	Stats.nbr_attempt = 1
@@ -22,4 +22,4 @@ func _on_Buzzer_press_finished() -> void:
 
 func _on_Fade_finished(fade_in) -> void:
 	if !fade_in:
-		var _osef = get_tree().change_scene("res://scenes/Game.tscn")
+		var _osef = get_tree().change_scene_to_file("res://scenes/Game.tscn")

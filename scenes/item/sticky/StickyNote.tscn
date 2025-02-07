@@ -1,87 +1,87 @@
 [gd_scene load_steps=5 format=2]
 
-[ext_resource path="res://assets/img/sticky-note.png" type="Texture" id=1]
+[ext_resource path="res://assets/img/sticky-note.png" type="Texture2D" id=1]
 [ext_resource path="res://scenes/item/sticky/StickyNote.gd" type="Script" id=2]
 
 [sub_resource type="Animation" id=3]
 length = 0.001
 tracks/0/type = "value"
-tracks/0/path = NodePath("Sprite:rotation_degrees")
+tracks/0/path = NodePath("Sprite2D:rotation_degrees")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/imported = false
 tracks/0/enabled = true
 tracks/0/keys = {
-"times": PoolRealArray( 0 ),
-"transitions": PoolRealArray( 1 ),
+"times": PackedFloat32Array( 0 ),
+"transitions": PackedFloat32Array( 1 ),
 "update": 0,
 "values": [ 31.4784 ]
 }
 tracks/1/type = "value"
-tracks/1/path = NodePath("Sprite:position")
+tracks/1/path = NodePath("Sprite2D:position")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/imported = false
 tracks/1/enabled = true
 tracks/1/keys = {
-"times": PoolRealArray( 0 ),
-"transitions": PoolRealArray( 1 ),
+"times": PackedFloat32Array( 0 ),
+"transitions": PackedFloat32Array( 1 ),
 "update": 0,
 "values": [ Vector2( 0, 0 ) ]
 }
 tracks/2/type = "bezier"
-tracks/2/path = NodePath("Sprite:position:x")
+tracks/2/path = NodePath("Sprite2D:position:x")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/imported = false
 tracks/2/enabled = true
 tracks/2/keys = {
-"points": PoolRealArray( 0, -0.25, 0, 0.25, 0 ),
-"times": PoolRealArray( 0 )
+"points": PackedFloat32Array( 0, -0.25, 0, 0.25, 0 ),
+"times": PackedFloat32Array( 0 )
 }
 tracks/3/type = "bezier"
-tracks/3/path = NodePath("Sprite:position:y")
+tracks/3/path = NodePath("Sprite2D:position:y")
 tracks/3/interp = 1
 tracks/3/loop_wrap = true
 tracks/3/imported = false
 tracks/3/enabled = true
 tracks/3/keys = {
-"points": PoolRealArray( 0, -0.25, 0, 0.25, 0 ),
-"times": PoolRealArray( 0 )
+"points": PackedFloat32Array( 0, -0.25, 0, 0.25, 0 ),
+"times": PackedFloat32Array( 0 )
 }
 
 [sub_resource type="Animation" id=4]
 resource_name = "fall"
 length = 2.0
 tracks/0/type = "bezier"
-tracks/0/path = NodePath("Sprite:rotation_degrees")
+tracks/0/path = NodePath("Sprite2D:rotation_degrees")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/imported = false
 tracks/0/enabled = true
 tracks/0/keys = {
-"points": PoolRealArray( 41.1357, -0.3, -21, 0.4, 4.82253, 63.1774, -0.2, 6.02816, 0.25, 0, -11.8226, -0.23, -5.22441, 0.25, 0 ),
-"times": PoolRealArray( 0, 0.9, 2 )
+"points": PackedFloat32Array( 41.1357, -0.3, -21, 0.4, 4.82253, 63.1774, -0.2, 6.02816, 0.25, 0, -11.8226, -0.23, -5.22441, 0.25, 0 ),
+"times": PackedFloat32Array( 0, 0.9, 2 )
 }
 tracks/1/type = "bezier"
-tracks/1/path = NodePath("Sprite:position:x")
+tracks/1/path = NodePath("Sprite2D:position:x")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/imported = false
 tracks/1/enabled = true
 tracks/1/keys = {
-"points": PoolRealArray( 0, -0.25, 0, 0.25, 0, -210.168, -0.25, 0, 0.5, -1.56267, 191.149, -0.25, 0, 0.25, 0 ),
-"times": PoolRealArray( 0, 0.8, 2 )
+"points": PackedFloat32Array( 0, -0.25, 0, 0.25, 0, -210.168, -0.25, 0, 0.5, -1.56267, 191.149, -0.25, 0, 0.25, 0 ),
+"times": PackedFloat32Array( 0, 0.8, 2 )
 }
 tracks/2/type = "bezier"
-tracks/2/path = NodePath("Sprite:position:y")
+tracks/2/path = NodePath("Sprite2D:position:y")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/imported = false
 tracks/2/enabled = true
 tracks/2/keys = {
-"points": PoolRealArray( 0, -0.25, 0, 0.2, 19.8217, 101.038, -0.5, 22.464, 0.4, -24.192, 398.54, -0.25, 0, 0.25, 0 ),
-"times": PoolRealArray( 0, 0.9, 2 )
+"points": PackedFloat32Array( 0, -0.25, 0, 0.2, 19.8217, 101.038, -0.5, 22.464, 0.4, -24.192, 398.54, -0.25, 0, 0.25, 0 ),
+"times": PackedFloat32Array( 0, 0.9, 2 )
 }
 
 [node name="Sticky" type="Node2D"]
@@ -91,7 +91,7 @@ script = ExtResource( 2 )
 anims/RESET = SubResource( 3 )
 anims/fall = SubResource( 4 )
 
-[node name="Sprite" type="Sprite" parent="."]
+[node name="Sprite2D" type="Sprite2D" parent="."]
 rotation = 0.549402
 scale = Vector2( 0.6, 0.6 )
 texture = ExtResource( 1 )
