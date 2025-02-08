@@ -1,6 +1,0 @@
-res://default_env.tres
-res://scenes/Game.tscn
-res://scenes/Game.gd
-res://scenes/item/buzzer/Buzzer.tscn
-res://scenes/ui/Fade.tscn
-res://scenes/item/bg/PowerArea.tscn

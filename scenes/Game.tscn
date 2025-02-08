@@ -97,9 +97,9 @@ size = Vector2(900, 40)
 [node name="Game" type="Node2D"]
 script = ExtResource("1")
 shrink_curve = SubResource("4")
-level_order = Array[int]([0])
+duration = 3.0
 
-[node name="ColorRect" type="ColorRect" parent="."]
+[node name="BlackBackground" type="ColorRect" parent="."]
 offset_left = -38.0
 offset_top = -44.0
 offset_right = 852.0
@@ -117,6 +117,7 @@ position = Vector2(600, 650)
 visible = false
 
 [node name="FakeBuzzers" parent="BG" instance=ExtResource("10")]
+visible = false
 
 [node name="Camera2D" type="Camera2D" parent="."]
 anchor_mode = 0
@@ -126,7 +127,7 @@ unique_name_in_owner = true
 position = Vector2(400, 600)
 scale = Vector2(0.5, 0.5)
 
-[node name="Sticky" parent="." instance=ExtResource("6")]
+[node name="StickyNote" parent="." instance=ExtResource("6")]
 unique_name_in_owner = true
 position = Vector2(350, 530)
 
