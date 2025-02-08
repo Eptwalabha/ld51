@@ -36,8 +36,8 @@ enum LEVEL {
 	NEED_POWER,
 	SHRINK_BOUNCE,
 	TINY,
-#	FALLING_OBJECT,
 
+	#FALLING_OBJECT,
 	FAKE_2,
 	NO_COUNTER,
 	LIGHT_TOO_SOON,
@@ -52,6 +52,19 @@ enum LEVEL {
 	IDLE,
 	VICTORY
 }
+
+@export var level_order: Array[LEVEL] = [
+	LEVEL.NO_COUNTER,
+	LEVEL.LIGHT_TOO_SOON,
+	LEVEL.TP_RANDOM,
+	LEVEL.FAKE_THE_RETURN,
+	LEVEL.FALL,
+	LEVEL.SHRINK,
+	LEVEL.TP_RANDOM_TINY,
+	LEVEL.IN_THE_DARK,
+	LEVEL.NEED_POWER_MAZE,
+	LEVEL.RANDOM_SHRINK_BOUNCE,
+]
 
 func _ready() -> void:
 	AudioServer.set_bus_mute(0, Stats.mute)
@@ -71,7 +84,7 @@ func _process(delta: float) -> void:
 		if abs(remaining) > extra_time :
 			remaining = extra_time
 			buzzer.turn_light(false)
-			trigger_game_over()
+			trigger_game_over(true)
 
 	update_buzzer(delta)
 	update_count_down()
@@ -106,12 +119,10 @@ func start_random_timer() -> void:
 	timer.start(randf() * 1.5 + .5)
 
 func update_count_down() -> void:
-	if remaining <= 0.0 or game_over:
+	if game_over:
 		count_down.text = "0.00"
 	else:
-		var second : int = int(floor(abs(remaining)))
-		var milli : int = int(100.0 * fmod(abs(remaining), 1.0))
-		count_down.text = "%s.%s" % [second, milli]
+		count_down.text = "%.2f" % max(0.0, remaining)
 
 func start_game() -> void:
 	eptwalabha.visible = false
@@ -221,10 +232,12 @@ func next_level() -> void:
 	level_end = false
 	remaining = duration
 
-func trigger_game_over() -> void:
+func trigger_game_over(instant: bool) -> void:
 	game_over = true
 	Stats.nbr_attempt += 1
 	dialog.text = tr(game_over_key())
+	if not instant:
+		await get_tree().create_timer(0.5).timeout
 	$AnimationPlayer.play("loose")
 
 func power_buzzer(power: bool) -> void:
@@ -236,7 +249,7 @@ func dialog_key() -> String:
 		LEVEL.INTRO: return "intro-01"
 		LEVEL.INTRO2: return "intro-02"
 		LEVEL.INTRO3: return "intro-03"
-	#	LEVEL.FALLING_OBJECT: return "falling-object"
+		#LEVEL.FALLING_OBJECT: return "falling-object"
 		LEVEL.TP_RANDOM: return "td-random"
 		LEVEL.RANDOM_SHRINK_BOUNCE: return "random-shrink-bounce"
 		LEVEL.RANDOM_BOUNCE: return "random-bounce"
@@ -290,7 +303,7 @@ func _on_Buzzer_pressed() -> void:
 			buzzer.play_sound(true)
 		else:
 			buzzer.play_sound(false)
-			trigger_game_over()
+			trigger_game_over(false)
 
 func _on_AnimationPlayer_animation_finished(_anim_name: String) -> void:
 	var _osef = get_tree().reload_current_scene()
