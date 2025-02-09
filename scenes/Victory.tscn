@@ -66,3 +66,4 @@ light_is_on = true
 
 [connection signal="finished" from="CanvasLayer/Fade" to="." method="_on_Fade_finished"]
 [connection signal="press_finished" from="Buzzer" to="." method="_on_Buzzer_press_finished"]
+[connection signal="pressed" from="Buzzer" to="." method="_on_buzzer_pressed"]

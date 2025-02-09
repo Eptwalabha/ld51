@@ -83,12 +83,12 @@ polygon = PackedVector2Array(-1, 155, -182, 47, -184, -42, -122, -77, 124, -85, 
 disabled = true
 
 [node name="Base" type="Area2D" parent="."]
+collision_layer = 2
 
 [node name="Base" type="CollisionPolygon2D" parent="Base"]
 polygon = PackedVector2Array(1, 150, -180, 47, -178, -45, -1, -152, 178, -48, 181, 46)
 
 [node name="Click" type="Area2D" parent="."]
-collision_layer = 3
 
 [node name="Cap" type="CollisionPolygon2D" parent="Click"]
 polygon = PackedVector2Array(23, -42, -71, -50, -133, -86, -149, -140, -114, -202, -65, -228, 19, -240, 94, -218, 132, -174, 149, -117, 105, -66)

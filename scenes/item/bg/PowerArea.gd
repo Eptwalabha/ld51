@@ -1,18 +1,20 @@
 class_name PowerArea
 extends Node2D
 
-signal entered
-signal exited
+var active : bool = false
+
+func activate() -> void:
+	active = true
+	visible = true
 
 func reset() -> void:
-	pass
+	active = false
+	visible = false
 
-func _on_Area2D_area_entered(_area: Area2D) -> void:
-	if !visible:
-		return
-	emit_signal("entered")
+func _on_Area2D_area_entered(area: Area2D) -> void:
+	if visible and active:
+		EventsBus.buzzer_powered.emit(true)
 
 func _on_Area2D_area_exited(_area: Area2D) -> void:
-	if !visible:
-		return
-	emit_signal("exited")
+	if visible and active:
+		EventsBus.buzzer_powered.emit(false)

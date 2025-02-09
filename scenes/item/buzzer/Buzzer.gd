@@ -29,6 +29,7 @@ var display_led: bool = false
 var buzz_velocity : Vector2 = Vector2.ZERO
 
 func _ready() -> void:
+	EventsBus.buzzer_powered.connect(_on_power_state_changed)
 	update_buzzer_state()
 
 func reset() -> void:
@@ -55,19 +56,22 @@ func in_the_dark() -> void:
 	await get_tree().create_timer(1.5).timeout
 	emit_signal("hidden_in_the_dark")
 
-func turn_light(on: bool = true, instant = false) -> void:
-	if !powered or on == light_is_on:
+func turn_light(on: bool, instant = false) -> void:
+	light_is_on = on
+	if !powered:
 		return
 	_turn_light(on, instant)
 
 func _turn_light(on: bool, instant : bool) -> void:
 	light_is_on = on
-	var to : float = 1.0 if light_is_on else 0.0
-	if instant or !on:
-		light.modulate.a = to
+	if !on or !powered:
+		light.modulate.a = 0.0
 	else:
-		var tween : Tween = get_tree().create_tween()
-		tween.tween_property(light, "modulate:a", to, .15)
+		if instant:
+			light.modulate.a = 1.1
+		else:
+			var tween : Tween = get_tree().create_tween()
+			tween.tween_property(light, "modulate:a", 1.1, .15)
 
 func _physics_process(delta: float) -> void:
 	if draggable and dragging:
@@ -96,19 +100,14 @@ func update_led() -> void:
 	led.get_node("Led-on").visible = powered
 	led.get_node("Led-off").visible = !powered
 
-func can_press() -> bool:
-	if pressing:
-		return false
-	if powered:
-		return with_cap or with_stick
-	return false
-
 func do_press() -> void:
-	if can_press():
-		pressing = true
-		$AnimationPlayer.play("press")
-		if powered:
-			emit_signal("pressed")
+	if pressing:
+		return
+
+	pressing = true
+	$AnimationPlayer.play("press")
+	if powered:
+		emit_signal("pressed")
 
 func _on_Click_input_event(_viewport: Node, event: InputEvent, _shape_idx: int) -> void:
 	if event is InputEventMouseButton and event.is_pressed():
@@ -117,7 +116,8 @@ func _on_Click_input_event(_viewport: Node, event: InputEvent, _shape_idx: int) 
 func _on_AnimationPlayer_animation_finished(anim_name: String) -> void:
 	if anim_name == 'press':
 		pressing = false
-		emit_signal('press_finished')
+		if powered:
+			emit_signal('press_finished')
 
 func _on_Base_input_event(_viewport: Node, event: InputEvent, _shape_idx: int) -> void:
 	if !draggable:
@@ -131,8 +131,12 @@ func _on_Base_input_event(_viewport: Node, event: InputEvent, _shape_idx: int) -
 			emit_signal("drag_stopped")
 			dragging = false
 
-
 func _on_Click_body_entered(body: Node) -> void:
 	if physic_enable or physics_collision:
 		if body != self:
 			do_press()
+
+func _on_power_state_changed(is_powered: bool) -> void:
+	powered = is_powered
+	update_led()
+	_turn_light(light_is_on, false)

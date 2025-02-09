@@ -8,7 +8,7 @@
 [ext_resource type="PackedScene" path="res://scenes/item/sticky/StickyNote.tscn" id="6"]
 [ext_resource type="FontFile" path="res://assets/fonts/font_counter.tres" id="7"]
 [ext_resource type="PackedScene" uid="uid://boh45t802s31y" path="res://scenes/item/buzzer/Buzzer.tscn" id="8"]
-[ext_resource type="PackedScene" path="res://scenes/item/bg/Maze.tscn" id="9"]
+[ext_resource type="PackedScene" uid="uid://dx6trv6ie4nhk" path="res://scenes/item/bg/Maze.tscn" id="9"]
 [ext_resource type="PackedScene" path="res://scenes/item/fake/FakeBuzzers.tscn" id="10"]
 [ext_resource type="FontFile" path="res://assets/fonts/font_mono_bold.tres" id="11"]
 
@@ -97,7 +97,8 @@ size = Vector2(900, 40)
 [node name="Game" type="Node2D"]
 script = ExtResource("1")
 shrink_curve = SubResource("4")
-duration = 3.0
+duration = 1.0
+extra_time = 20.0
 
 [node name="BlackBackground" type="ColorRect" parent="."]
 offset_left = -38.0
@@ -170,7 +171,7 @@ layout_mode = 2
 size_flags_vertical = 2
 size_flags_stretch_ratio = 0.4
 theme_override_fonts/font = ExtResource("7")
-text = "count-down"
+text = "10.00"
 horizontal_alignment = 1
 
 [node name="MarginContainer2" type="MarginContainer" parent="CanvasLayer/Control/MarginContainer/VBoxContainer"]
@@ -181,6 +182,7 @@ theme_override_constants/margin_bottom = 40
 
 [node name="Dialog" type="Label" parent="CanvasLayer/Control/MarginContainer/VBoxContainer/MarginContainer2"]
 unique_name_in_owner = true
+visible = false
 layout_mode = 2
 size_flags_vertical = 11
 theme_override_constants/line_spacing = 8
@@ -256,9 +258,6 @@ shape = SubResource("3")
 [node name="Timer" type="Timer" parent="."]
 one_shot = true
 
-[connection signal="entered" from="BG/PowerArea" to="." method="_on_PowerArea_entered"]
-[connection signal="exited" from="BG/PowerArea" to="." method="_on_PowerArea_exited"]
-[connection signal="entered" from="BG/Maze" to="." method="_on_Maze_entered"]
 [connection signal="drag_started" from="Buzzer" to="." method="_on_Buzzer_drag_started"]
 [connection signal="drag_stopped" from="Buzzer" to="." method="_on_Buzzer_drag_stopped"]
 [connection signal="hidden_in_the_dark" from="Buzzer" to="." method="_on_Buzzer_hidden_in_the_dark"]

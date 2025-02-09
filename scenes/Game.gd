@@ -10,14 +10,14 @@ var moving_speed : float = 200.0
 @onready var buzzer : Buzzer = $"%Buzzer"
 @onready var fade : Fade = $"%Fade"
 @onready var eptwalabha : Label = $"%Eptwalabha"
-@onready var powerArea : PowerArea = $BG/PowerArea
+@onready var power_area : PowerArea = $BG/PowerArea
 @onready var timer : Timer = $Timer
 @onready var mute : CheckBox = $"%Mute"
 
 @export var shrink_curve: Curve
 @export var duration: float = 10.0
-@export var extra_time: float = 1.0
-@export var extra_start: float = 0.2
+@export var extra_time: float = 1.2
+@export var extra_start: float = 0.3
 
 enum GAME_STATE {
 	TITLE_SCREEN,
@@ -38,7 +38,7 @@ func _ready() -> void:
 	mute.button_pressed = Stats.mute
 	randomize()
 	count_down.hide()
-	buzzer.turn_light(true, true)
+	buzzer.reset()
 	reset_all_items()
 	fade.fade_in()
 
@@ -55,7 +55,6 @@ func _process(delta: float) -> void:
 		game_state = GAME_STATE.GAME_OVER
 		buzzer.turn_light(false)
 		trigger_game_over(true)
-
 
 	update_buzzer(delta)
 	update_count_down()
@@ -102,7 +101,7 @@ func start_game() -> void:
 func turn_on_buzzer_light() -> void:
 	if current_level == Level.LEVEL_NAME.DONT_TURN_LIGHT:
 		return
-	buzzer.turn_light()
+	buzzer.turn_light(true)
 
 func move_buzzer_at_random() -> void:
 	buzzer.global_position = random_position()
@@ -125,7 +124,7 @@ func next_level() -> void:
 	buzzer.turn_light(false)
 	buzzer.scale = b_scale
 	count_down.visible = true
-	powerArea.visible = false
+	power_area.reset()
 	reset_all_items()
 
 	match current_level:
@@ -136,7 +135,7 @@ func next_level() -> void:
 		Level.LEVEL_NAME.NEED_POWER:
 			new_buzzer_position = Vector2(150, 650)
 			buzzer.display_led = true
-			powerArea.visible = true
+			power_area.activate()
 			buzzer.draggable = true
 			buzzer.powered = false
 		Level.LEVEL_NAME.TINY:
@@ -152,13 +151,14 @@ func next_level() -> void:
 		Level.LEVEL_NAME.NO_CAP:
 			buzzer.with_cap = false
 		Level.LEVEL_NAME.NEED_POWER_MAZE:
-			$BG/Maze.start()
+			var maze = $BG/Maze
+			maze.start()
 			buzzer.display_led = true
 			buzzer.powered = false
 			buzzer.draggable = true
 			buzzer.physics_collision = true
 			buzzer.scale = Vector2(.15, .15)
-			buzzer.global_position = Vector2(200, 600)
+			buzzer.global_position = maze.get_starting_position()
 			new_buzzer_position = buzzer.global_position
 		Level.LEVEL_NAME.SHRINK_BOUNCE, Level.LEVEL_NAME.BOUNCE:
 			bouncing_direction = random_direction()
@@ -209,10 +209,6 @@ func trigger_game_over(instant: bool) -> void:
 		await get_tree().create_timer(0.5).timeout
 	$AnimationPlayer.play("loose")
 
-func power_buzzer(power: bool) -> void:
-	buzzer.powered = power
-	buzzer.update_led()
-
 # CALLBACKS
 
 func _on_Buzzer_pressed() -> void:
@@ -252,28 +248,19 @@ func _on_Buzzer_drag_stopped() -> void:
 func _on_Buzzer_drag_started() -> void:
 	pass
 
-func _on_PowerArea_entered() -> void:
-	power_buzzer(true)
-
-func _on_PowerArea_exited() -> void:
-	power_buzzer(false)
-
-func _on_Maze_entered() -> void:
-	power_buzzer(true)
-
-func _on_Maze_exited() -> void:
-	power_buzzer(false)
-
 func _on_Timer_timeout() -> void:
 	match current_level:
 		Level.LEVEL_NAME.LIGHT_TOO_SOON:
 			buzzer.turn_light(true)
-		Level.LEVEL_NAME.RANDOM_BOUNCE, Level.LEVEL_NAME.RANDOM_SHRINK_BOUNCE:
-			bouncing_direction = random_direction()
-			start_random_timer()
-		Level.LEVEL_NAME.TP_RANDOM, Level.LEVEL_NAME.TP_RANDOM_TINY:
-			buzzer.global_position = random_position()
-			if remaining >= (extra_time + 1.0):
+		Level.LEVEL_NAME.RANDOM_BOUNCE, \
+		Level.LEVEL_NAME.RANDOM_SHRINK_BOUNCE:
+			if remaining >= (extra_time + 0.7):
+				bouncing_direction = random_direction()
+				start_random_timer()
+		Level.LEVEL_NAME.TP_RANDOM, \
+		Level.LEVEL_NAME.TP_RANDOM_TINY:
+			if remaining >= (extra_time + 0.7):
+				buzzer.global_position = random_position()
 				start_random_timer()
 
 func _on_Buzzer_hidden_in_the_dark() -> void:

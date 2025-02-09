@@ -19,6 +19,7 @@ config/icon="res://icon.png"
 
 Stats="*res://script/stats.gd"
 Level="*res://script/level.gd"
+EventsBus="*res://script/events.gd"
 
 [display]
 

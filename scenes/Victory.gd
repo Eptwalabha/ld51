@@ -11,7 +11,7 @@ func _ready() -> void:
 		'click': Stats.nbr_click,
 		'time': str(int(Stats.total_time))
 	}
-	$Buzzer.turn_light()
+	$Buzzer.turn_light(true)
 	$CanvasLayer/Control/VBoxContainer/RichTextLabel.text = text.format(data)
 
 func _on_Buzzer_press_finished() -> void:
@@ -23,3 +23,6 @@ func _on_Buzzer_press_finished() -> void:
 func _on_Fade_finished(fade_in) -> void:
 	if !fade_in:
 		var _osef = get_tree().change_scene_to_file("res://scenes/Game.tscn")
+
+func _on_buzzer_pressed() -> void:
+	$Buzzer.play_sound(true)
